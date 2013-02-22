@@ -12,13 +12,14 @@
 
 class Polygon {
 public:
-    Polygon(int size = 1);
+    Polygon(unsigned int size = 1);
     Polygon(const Polygon& other);
     Polygon& operator=(const Polygon& other);
     ~Polygon();
-    Point Element(int i) const;
+    unsigned int Size() const;
+    Point Element(unsigned int i) const;
 protected:
-    Point& element(int i);
+    Point& element(unsigned int i);
 };
 
 #endif // POLYGON_H
