@@ -3,12 +3,7 @@
 
 #include "point.h"
 
-/* Assigned to: Apineh Asadoorian
-    I decided to make one minor change to this class,
-    but it shouldn't change the overall design.  We're
-    not using a line class anymore, so the array here
-    will store points instead.
-*/
+/* Assigned to: Apineh Asadoorian */
 
 class Polygon {
 public:
@@ -18,6 +13,7 @@ public:
     ~Polygon();
     unsigned int Size() const;
     Point Element(unsigned int i) const;
+    void Translate(double X, double Y);
 protected:
     Point& element(unsigned int i);
 };

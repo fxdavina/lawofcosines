@@ -3,14 +3,7 @@
 
 #include "geometry.h"
 
-/* Assigned to: Jacky Yang
-
-I decided to do something slightly different.  We're basically
-going to merge the Point and Line classes because it's somewhat
-more efficient, and we don't necessarily need to deal with
-Lines as discrete objects.
-
-*/
+/* Assigned to: Jacky Yang */
 
 struct Point {
     Point(double x = 0, double y = 0);

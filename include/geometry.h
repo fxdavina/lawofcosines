@@ -14,8 +14,15 @@ Returns the distance between two points.
     return distance;
 }
 
-double Slope(double x1, double y1, double x2, double y2);
-//Assigned to: Shang Yi Huang
+double Slope(double x1, double y1, double x2, double y2)
+/* Written by: Shang Yi (Sam) Huang
+Calculates the slope between two points.
+*/
+{
+       double slope;
+       slope=(y1-y2)/(x1-x2);
+       return (slope);
+}
 
 
 double Perpendicular(double slope)
