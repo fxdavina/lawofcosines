@@ -32,7 +32,7 @@ private:
     void doLeftObtuse(const Triangle& t);
     void doRightObtuse(const Triangle& t);
     unsigned int numPolygons;
-    ScreenPolygon* myShapes;
+    ScreenPolygon** myShapes;
     ScreenPolygon* myOutline;
     double minX;
     double minY;
