@@ -5,6 +5,8 @@
 
 /* Assigned to: Jacky Yang */
 
+enum SLOPE_ERROR { UNDEFINED };
+
 struct Point {
     Point(double x = 0, double y = 0);
     Point Segment(double slope, double distance);
