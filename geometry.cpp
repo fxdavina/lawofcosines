@@ -54,7 +54,3 @@ gives x2 < x1
      x2=(distance/sqrt(1+slope*slope))+x1;
      y2=slope*(x2-x1)+y1;
 }
-
-
-
-#endif // GEOMETRY_H
