@@ -29,7 +29,7 @@ Point Polygon::Element(unsigned int position) const
         return pointsVector[position];
 }
 
-unsigned int Size() const {
+unsigned int Polygon::Size() const {
      return pointsVector.size();
 }
 
