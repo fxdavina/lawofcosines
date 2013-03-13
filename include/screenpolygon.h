@@ -10,8 +10,11 @@ public:
     ScreenPolygon& operator=(const ScreenPolygon& other);
     void Draw() const;
     Polygon& Shape() const;
+    void Translate(double X, double Y);
     double Scale;
     int Color;
+private:
+    Polygon* poly;
 };
 
 #endif // SCREENPOLYGON_H
