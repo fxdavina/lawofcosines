@@ -25,7 +25,7 @@ public:
     double Height() const;
     double Width() const;
     unsigned int Count() const;
-    double Scale;
+    void Scale(double s);
     void Translate(double X, double Y);
 private:
     void doLeftAcute(const Triangle& t);
