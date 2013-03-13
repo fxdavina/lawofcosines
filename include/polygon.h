@@ -16,6 +16,8 @@ public:
     void Translate(double X, double Y);
 protected:
     Point& element(unsigned int i);
+private:
+    vector<Point> pointsVector;
 };
 
 #endif // POLYGON_H
