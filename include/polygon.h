@@ -1,6 +1,7 @@
 #ifndef POLYGON_H
 #define POLYGON_H
 
+#include <vector>
 #include "point.h"
 
 /* Assigned to: Apineh Asadoorian */
@@ -17,7 +18,7 @@ public:
 protected:
     Point& element(unsigned int i);
 private:
-    vector<Point> pointsVector;
+    std::vector<Point> pointsVector;
 };
 
 #endif // POLYGON_H
