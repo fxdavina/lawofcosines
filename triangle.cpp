@@ -21,5 +21,5 @@ double Triangle::getLength(int point)
 {
 	int p1 = (point + 1) % 3; //can get one of other point
 	int p2 = (point + 2) % 3; //can get one of other point
-	return element(p1).distance(element(p2)); //return the length opposite point
+	return element(p1).Distance(element(p2)); //return the length opposite point
 }

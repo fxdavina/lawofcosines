@@ -1,0 +1,54 @@
+# Project: Project1
+# Makefile created by Dev-C++ 4.9.9.2
+
+CPP  = g++.exe -D__DEBUG__
+CC   = gcc.exe -D__DEBUG__
+WINDRES = windres.exe
+RES  = 
+OBJ  = main.o outline.o parallelogram.o point.o polygon.o screenpolygon.o triangle.o geometry.o proof.o $(RES)
+LINKOBJ  = main.o outline.o parallelogram.o point.o polygon.o screenpolygon.o triangle.o geometry.o proof.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib" -lalleg  -g3 
+INCS =  -I"C:/Dev-Cpp/include" 
+CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include" 
+BIN  = "Law of Cosine.exe"
+CXXFLAGS = $(CXXINCS)   -g3
+CFLAGS = $(INCS)   -g3
+RM = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before "Law of Cosine.exe" all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o "Law of Cosine.exe" $(LIBS)
+
+main.o: main.cpp
+	$(CPP) -c main.cpp -o main.o $(CXXFLAGS)
+
+outline.o: outline.cpp
+	$(CPP) -c outline.cpp -o outline.o $(CXXFLAGS)
+
+parallelogram.o: parallelogram.cpp
+	$(CPP) -c parallelogram.cpp -o parallelogram.o $(CXXFLAGS)
+
+point.o: point.cpp
+	$(CPP) -c point.cpp -o point.o $(CXXFLAGS)
+
+polygon.o: polygon.cpp
+	$(CPP) -c polygon.cpp -o polygon.o $(CXXFLAGS)
+
+screenpolygon.o: screenpolygon.cpp
+	$(CPP) -c screenpolygon.cpp -o screenpolygon.o $(CXXFLAGS)
+
+triangle.o: triangle.cpp
+	$(CPP) -c triangle.cpp -o triangle.o $(CXXFLAGS)
+
+geometry.o: geometry.cpp
+	$(CPP) -c geometry.cpp -o geometry.o $(CXXFLAGS)
+
+proof.o: proof.cpp
+	$(CPP) -c proof.cpp -o proof.o $(CXXFLAGS)

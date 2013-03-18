@@ -3,7 +3,7 @@
 #include <math.h>
 using namespace std;
 
-parallelogram::Parallelogram(const Point& p1, const Point& p2, const Point& p3): Polygon(4)
+Parallelogram::Parallelogram(const Point& p1, const Point& p2, const Point& p3): Polygon(4)
 {
     Point p4;
     p4.X = p1.X - p2.X + p3.X;

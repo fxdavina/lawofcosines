@@ -11,6 +11,7 @@ enum PROOF_TYPE {
     LEFT_OBTUSE,
     RIGHT_OBTUSE
 };
+    enum DIR { NORTH, NORTHWEST, WEST, SOUTHWEST, SOUTH, SOUTHEAST, EAST, NORTHEAST };
 
 class Proof {
 public:
@@ -19,7 +20,7 @@ public:
     ~Proof();
     Proof& operator=(const Proof& other);
     ScreenPolygon& Shape(unsigned int index) const;
-    ScreenPolygon& Outline() const;
+    ScreenPolygon& GetOutline() const;
     double MinX() const;
     double MinY() const;
     double Height() const;
@@ -28,6 +29,10 @@ public:
     void Scale(double s);
     void Translate(double X, double Y);
 private:
+    double verticalX(const Point& p1, const Point& p3);
+    double horizontalY(const Point& p1, const Point& p3);
+    DIR Direction(const Point& p1, const Point& p2);
+    double drawDirection(const Point& p1, const Point& p2, const Point& p3);
     void doLeftAcute(const Triangle& t);
     void doRightAcute(const Triangle& t);
     void doLeftObtuse(const Triangle& t);

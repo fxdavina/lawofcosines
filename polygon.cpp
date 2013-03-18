@@ -1,5 +1,6 @@
 #include "Polygon.h"
-#include "Point.h"
+#include <vector>
+
 
 Polygon::Polygon(unsigned int size)
 {
@@ -29,7 +30,8 @@ Point Polygon::Element(unsigned int position) const
         return pointsVector[position];
 }
 
-unsigned int Polygon::Size() const {
+unsigned int Polygon::Size() const
+{
      return pointsVector.size();
 }
 
@@ -42,4 +44,13 @@ void Polygon::copy(const Polygon &other)
 {
     for(int i=0;i<other.pointsVector.size();i++)
         pointsVector.push_back(other.pointsVector.at(i));
+}
+
+void Polygon::Translate(double X, double Y)
+{
+    for(int i = 0; i < Size(); i++)
+    {
+        pointsVector[i].X += X;
+        pointsVector[i].Y += Y;
+    }
 }

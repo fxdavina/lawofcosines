@@ -1,8 +1,8 @@
 #include "Point.h"
-Point::Point(double X, double Y)
+Point::Point(double x, double y)
 {
-    x=X;
-    y=Y;
+    X = x;
+    Y = y;
 }
 Point Point::Segment(double slope, double distance) {
     Point result;
@@ -10,11 +10,20 @@ Point Point::Segment(double slope, double distance) {
 	return result;
 }
 double Point::Distance(const Point& p2) const {
-    return distance(X,Y,p2.X,p2.Y);
+    double x,
+           y;
+    x = p2.X;
+    y = p2.Y;    
+    return distance(X,Y,x,y);
 }
 double Point::Slope(const Point& p2) const {
-	return slope(X,Y,p2.X,p2.Y);
+	    double x,
+           y;
+    x = p2.X;
+    y = p2.Y;
+    return slope(X,Y,x,y);
 }
-double Point::Perpendicular(const Point& p2) const [
+double Point::Perpendicular(const Point& p2) const 
+{
 	return perpendicular(Slope(p2));
 }

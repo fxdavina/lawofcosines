@@ -1,7 +1,7 @@
 #ifndef SCREENPOLYGON_H
 #define SCREENPOLYGON_H
-#include <allegro.h>
 #include "polygon.h"
+#include <allegro.h>
 
 class ScreenPolygon {
 public:
