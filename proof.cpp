@@ -4,7 +4,6 @@
 #include "parallelogram.h"
 #include "outline.h"
 #include <allegro.h>
-#include <iostream>
 using namespace std;
 
 Proof::~Proof()
@@ -653,7 +652,7 @@ void Proof::doRightObtuse(const Triangle& t)
     length = p1.Distance(p2);
     if(dir)
     {
-           cout << "dir: " << dir << ", length: " << length << ", slope: " << slant << ", dir: " << Direction(p1,p2) << endl;
+           //cout << "dir: " << dir << ", length: " << length << ", slope: " << slant << ", dir: " << Direction(p1,p2) << endl;
            slant = p1.Perpendicular(p2);
            p3 = p2.Segment(slant, dir * length);
     }
@@ -691,9 +690,10 @@ void Proof::doRightObtuse(const Triangle& t)
     
     dir = drawDirection(p1,p2,Shape->Element(2));
     length = t.Element(0).Distance(t.Element(2));
-    cout<<"length: "<<horizontalY(p1,Shape->Element(2))<<endl;
+    //cout<<"length: "<<horizontalY(p1,Shape->Element(2))<<endl;
     if(dir)
-    {cout<<"dir not zero"<<endl;
+    {
+           //cout<<"dir not zero"<<endl;
        slant = t.Element(0).Perpendicular(t.Element(2));
        p3 = p1.Segment(slant, dir * length);
     }
@@ -713,7 +713,8 @@ void Proof::doRightObtuse(const Triangle& t)
 //                 break;
         }
 
-    }cout<<"end"<<endl;
+    }
+    //cout<<"end"<<endl;
 //    if(t.Element(0).X - t.Element(2).X == 0)//infinite slant
 //    {
 //        p2.Y = p1.Y;
@@ -735,13 +736,13 @@ void Proof::doRightObtuse(const Triangle& t)
     Shape = new Triangle(p1,p2,p3);
     myShapes[2] = new ScreenPolygon(Shape);
     myShapes[2]->Color = makecol(255,223,223);//pink
-    cout<<"after myShapes"<<endl;
+    //cout<<"after myShapes"<<endl;
     //done with outline
     outline->Element(3) = Shape->Element(1);
-    cout<<"after outline"<<endl;
+    //cout<<"after outline"<<endl;
     width = minX = outline->Element(0).X;
     height = minY = outline->Element(0).Y;
-    cout<<"after width and height"<<endl;
+    //cout<<"after width and height"<<endl;
     for(int i=0; i<numPolygons; i++)
     {
         for(int j=0; j< myShapes[i]->Shape().Size(); j++)
@@ -758,7 +759,7 @@ void Proof::doRightObtuse(const Triangle& t)
     }
     width = width-minX;
     height = height-minY;
-    cout<<"after all"<<endl;
+    //cout<<"after all"<<endl;
 }
 
 DIR Proof::Direction(const Point& p1, const Point& p2) {

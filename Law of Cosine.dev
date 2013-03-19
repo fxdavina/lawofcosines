@@ -2,10 +2,10 @@
 FileName=Law of Cosine.dev
 Name=Project1
 UnitCount=9
-Type=1
+Type=0
 Ver=1
 ObjFiles=
-Includes=\include
+Includes=include
 Libs=
 PrivateResource=
 ResourceIncludes=

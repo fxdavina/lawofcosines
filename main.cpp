@@ -1,7 +1,6 @@
 //http://www.cppgameprogramming.com/cgi/nav.cgi?page=allegprimitive
 
 #include <allegro.h>
-#include <iostream>
 #include <fstream>
 #include <cstdlib>
 #include "ScreenPolygon.h"
@@ -40,6 +39,8 @@ int cursor_x = 0;
 int cursor_y = 0;
 int cursor_r_x = 0;
 int cursor_r_y = 0;
+int screen_width=0;
+int screen_height=0;
 
 int x1(400);
 int y_1(450);
@@ -59,15 +60,18 @@ int main()
     install_keyboard();
     install_mouse();
     set_mouse_speed(10,10);
-    set_gfx_mode( GFX_AUTODETECT_WINDOWED, 1280, 640, 0, 0);
+    
+    get_desktop_resolution(&screen_width,&screen_height);
+    set_color_depth(desktop_color_depth());
+    set_gfx_mode( GFX_AUTODETECT_FULLSCREEN, screen_width, screen_height, 0, 0);
     
     base = new Triangle(Point(x1,y_1),Point(x2,y2),Point(x3,y3));
     reflector(base);
     
-    buffer = create_bitmap(1280,640);
+    buffer = create_bitmap(screen_width,screen_height);
     Center();
-    Show();
-    show_mouse(screen);
+    //Show();
+    show_mouse(NULL);
 	
 	while(!key[KEY_ESC])
 	{	
@@ -76,16 +80,15 @@ int main()
 		{
 	      getMouseDrag(x1,y_1);	
 		}
-		if(pointclick(x1, y_1, x2, y2, x3, y3)==2)
+		else if(pointclick(x1, y_1, x2, y2, x3, y3)==2)
 		{
 	      getMouseDrag(x2,y2);	
 		}
-		if(pointclick(x1, y_1, x2, y2, x3, y3)==3)
+		else if(pointclick(x1, y_1, x2, y2, x3, y3)==3)
 		{    
 			getMouseDrag(x3,y3);	
 		}	  
-		
-		if(key[KEY_A])
+		else if(key[KEY_A])
 		{
 
               Animation();
@@ -93,257 +96,258 @@ int main()
           	  cursor_y = 0;
           	  rest(400);
       	}
-      	
-      	getRightMouse();
-        if(rpointclick(x1, y_1, x2, y2, x3, y3)==1)
-        {
-			if(y_1 >= y2 && y_1 >= y3) //top
-			{
-				if(x2 < x3)
-				{
-					Triangle* temp = new Triangle(Point(x1,y_1),Point(x2,y2),Point(x3,y3));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-				else if(x3 < x2)
-				{
-					Triangle* temp = new Triangle(Point(x1,y_1),Point(x3,y3),Point(x2,y2));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-			}
-			else if(y_1 <= y2 && y_1 <= y3) //bottom
-			{
-				if(x2 < x3)
-				{
-					Triangle* temp = new Triangle(Point(x1,y_1),Point(x3,y3),Point(x2,y2));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-				else if(x3 < x2)
-				{
-					Triangle* temp = new Triangle(Point(x1,y_1),Point(x2,y2),Point(x3,y3));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-			}			
-			else if(x1 >= x2 && x1 >= x3)  //right
-			{
-				if(y2 < y3)
-				{
-					Triangle* temp = new Triangle(Point(x1,y_1),Point(x3,y3),Point(x2,y2));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-				else if(y3 < y2)
-				{
-					Triangle* temp = new Triangle(Point(x1,y_1),Point(x2,y2),Point(x3,y3));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-			}
-			else if(x1 <= x2 && x1 <= x3)  //left
-			{
-				cout <<"left";
-                if(y2 < y3)
-				{
-					Triangle* temp = new Triangle(Point(x1,y_1),Point(x2,y2),Point(x3,y3));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-				else if(y3 < y2)
-				{
-					Triangle* temp = new Triangle(Point(x1,y_1),Point(x3,y3),Point(x2,y2));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-			}
-			else   //middle Y
-			{
-				if(y_1 < y3)
-				{
-					Triangle* temp = new Triangle(Point(x1,y_1),Point(x2,y2),Point(x3,y3));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-				else if(y_1 < y2)
-				{
-					Triangle* temp = new Triangle(Point(x1,y_1),Point(x3,y3),Point(x2,y2));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-			}
-        }
-      	else if(rpointclick(x1, y_1, x2, y2, x3, y3)==2)
-        {
-			if(y2 >= y_1 && y2 >= y3) //top
-			{
-				if(x1 < x3)
-				{
-					Triangle* temp = new Triangle(Point(x2,y2),Point(x1,y_1),Point(x3,y3));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-				else if(x3 < x1)
-				{
-					Triangle* temp = new Triangle(Point(x2,y2),Point(x3,y3),Point(x1,y_1));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-			}
-			else if(y2 <= y_1 && y2 <= y3) //bottom
-			{
-				if(x1 < x3)
-				{
-					Triangle* temp = new Triangle(Point(x2,y2),Point(x3,y3),Point(x1,y_1));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-				else if(x3 < x1)
-				{
-					Triangle* temp = new Triangle(Point(x2,y2),Point(x1,y_1),Point(x3,y3));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-			}			
-			else if(x2 >= x1 && x2 >= x3)  //right
-			{
-				if(y_1 < y3)
-				{
-					Triangle* temp = new Triangle(Point(x2,y2),Point(x3,y3),Point(x1,y_1));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-				else if(y3 < y_1)
-				{
-					Triangle* temp = new Triangle(Point(x2,y2),Point(x1,y_1),Point(x3,y3));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-			}			
-			else if(x2 <= x1 && x2 <= x3)  //left
-			{
-				if(y_1 < y3)
-				{
-					Triangle* temp = new Triangle(Point(x2,y2),Point(x1,y_1),Point(x3,y3));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-				else if(y3 < y_1)
-				{
-					Triangle* temp = new Triangle(Point(x2,y2),Point(x3,y3),Point(x1,y_1));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-			}
-			else   //middle
-			{
-				if(y2 < y3)
-				{
-					Triangle* temp = new Triangle(Point(x2,y2),Point(x1,y_1),Point(x3,y3));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-				else if(y2 < y_1)
-				{
-					Triangle* temp = new Triangle(Point(x2,y2),Point(x3,y3),Point(x1,y_1));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-			}
-        }
-        if(rpointclick(x1, y_1, x2, y2, x3, y3)==3)
-        {
-			if(y3 >= y_1 && y3 >= y2) //top
-			{
-				if(x1 < x2)
-				{
-					Triangle* temp = new Triangle(Point(x3,y3),Point(x1,y_1),Point(x2,y2));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-				else if(x2 < x1)
-				{
-					Triangle* temp = new Triangle(Point(x3,y3),Point(x2,y2),Point(x1,y_1));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-			}
-			else if(y3 <= y_1 && y3 <= y2) //bottom
-			{
-				if(x1 < x2)
-				{
-					Triangle* temp = new Triangle(Point(x3,y3),Point(x2,y2),Point(x1,y_1));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-				else if(x2 < x1)
-				{
-					Triangle* temp = new Triangle(Point(x3,y3),Point(x1,y_1),Point(x2,y2));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-			}
-			else if(x3 >= x1 && x3 >= x2)  //right
-			{
-				if(y_1 < y2)
-				{
-					Triangle* temp = new Triangle(Point(x3,y3),Point(x2,y2),Point(x1,y_1));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-				else if(y2 < y_1)
-				{
-					Triangle* temp = new Triangle(Point(x3,y3),Point(x1,y_1),Point(x2,y2));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-			}			
-			else if(x3 <= x1 && x3 <= x2)  //left
-			{
-				if(y_1 < y2)
-				{
-					Triangle* temp = new Triangle(Point(x3,y3),Point(x1,y_1),Point(x2,y2));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-				else if(y2 < y_1)
-				{
-					Triangle* temp = new Triangle(Point(x3,y3),Point(x2,y2),Point(x1,y_1));
-					delete base;
-					base = temp;
-					baseangle = temp->Angle(0);
-				}
-			} 
-        }
-      	
+      	else
+      	{
+            getRightMouse();
+            if(rpointclick(x1, y_1, x2, y2, x3, y3)==1)
+            {
+    			if(y_1 >= y2 && y_1 >= y3) //top
+    			{
+    				if(x2 < x3)
+    				{
+    					Triangle* temp = new Triangle(Point(x1,y_1),Point(x2,y2),Point(x3,y3));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    				else if(x3 < x2)
+    				{
+    					Triangle* temp = new Triangle(Point(x1,y_1),Point(x3,y3),Point(x2,y2));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    			}
+    			else if(y_1 <= y2 && y_1 <= y3) //bottom
+    			{
+    				if(x2 < x3)
+    				{
+    					Triangle* temp = new Triangle(Point(x1,y_1),Point(x3,y3),Point(x2,y2));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    				else if(x3 < x2)
+    				{
+    					Triangle* temp = new Triangle(Point(x1,y_1),Point(x2,y2),Point(x3,y3));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    			}			
+    			else if(x1 >= x2 && x1 >= x3)  //right
+    			{
+    				if(y2 < y3)
+    				{
+    					Triangle* temp = new Triangle(Point(x1,y_1),Point(x3,y3),Point(x2,y2));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    				else if(y3 < y2)
+    				{
+    					Triangle* temp = new Triangle(Point(x1,y_1),Point(x2,y2),Point(x3,y3));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    			}
+    			else if(x1 <= x2 && x1 <= x3)  //left
+    			{
+    //				cout <<"left";
+                    if(y2 < y3)
+    				{
+    					Triangle* temp = new Triangle(Point(x1,y_1),Point(x2,y2),Point(x3,y3));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    				else if(y3 < y2)
+    				{
+    					Triangle* temp = new Triangle(Point(x1,y_1),Point(x3,y3),Point(x2,y2));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    			}
+    			else   //middle Y
+    			{
+    				if(y_1 < y3)
+    				{
+    					Triangle* temp = new Triangle(Point(x1,y_1),Point(x2,y2),Point(x3,y3));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    				else if(y_1 < y2)
+    				{
+    					Triangle* temp = new Triangle(Point(x1,y_1),Point(x3,y3),Point(x2,y2));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    			}
+            }
+          	else if(rpointclick(x1, y_1, x2, y2, x3, y3)==2)
+            {
+    			if(y2 >= y_1 && y2 >= y3) //top
+    			{
+    				if(x1 < x3)
+    				{
+    					Triangle* temp = new Triangle(Point(x2,y2),Point(x1,y_1),Point(x3,y3));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    				else if(x3 < x1)
+    				{
+    					Triangle* temp = new Triangle(Point(x2,y2),Point(x3,y3),Point(x1,y_1));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    			}
+    			else if(y2 <= y_1 && y2 <= y3) //bottom
+    			{
+    				if(x1 < x3)
+    				{
+    					Triangle* temp = new Triangle(Point(x2,y2),Point(x3,y3),Point(x1,y_1));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    				else if(x3 < x1)
+    				{
+    					Triangle* temp = new Triangle(Point(x2,y2),Point(x1,y_1),Point(x3,y3));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    			}			
+    			else if(x2 >= x1 && x2 >= x3)  //right
+    			{
+    				if(y_1 < y3)
+    				{
+    					Triangle* temp = new Triangle(Point(x2,y2),Point(x3,y3),Point(x1,y_1));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    				else if(y3 < y_1)
+    				{
+    					Triangle* temp = new Triangle(Point(x2,y2),Point(x1,y_1),Point(x3,y3));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    			}			
+    			else if(x2 <= x1 && x2 <= x3)  //left
+    			{
+    				if(y_1 < y3)
+    				{
+    					Triangle* temp = new Triangle(Point(x2,y2),Point(x1,y_1),Point(x3,y3));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    				else if(y3 < y_1)
+    				{
+    					Triangle* temp = new Triangle(Point(x2,y2),Point(x3,y3),Point(x1,y_1));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    			}
+    			else   //middle
+    			{
+    				if(y2 < y3)
+    				{
+    					Triangle* temp = new Triangle(Point(x2,y2),Point(x1,y_1),Point(x3,y3));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    				else if(y2 < y_1)
+    				{
+    					Triangle* temp = new Triangle(Point(x2,y2),Point(x3,y3),Point(x1,y_1));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    			}
+            }
+            if(rpointclick(x1, y_1, x2, y2, x3, y3)==3)
+            {
+    			if(y3 >= y_1 && y3 >= y2) //top
+    			{
+    				if(x1 < x2)
+    				{
+    					Triangle* temp = new Triangle(Point(x3,y3),Point(x1,y_1),Point(x2,y2));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    				else if(x2 < x1)
+    				{
+    					Triangle* temp = new Triangle(Point(x3,y3),Point(x2,y2),Point(x1,y_1));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    			}
+    			else if(y3 <= y_1 && y3 <= y2) //bottom
+    			{
+    				if(x1 < x2)
+    				{
+    					Triangle* temp = new Triangle(Point(x3,y3),Point(x2,y2),Point(x1,y_1));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    				else if(x2 < x1)
+    				{
+    					Triangle* temp = new Triangle(Point(x3,y3),Point(x1,y_1),Point(x2,y2));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    			}
+    			else if(x3 >= x1 && x3 >= x2)  //right
+    			{
+    				if(y_1 < y2)
+    				{
+    					Triangle* temp = new Triangle(Point(x3,y3),Point(x2,y2),Point(x1,y_1));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    				else if(y2 < y_1)
+    				{
+    					Triangle* temp = new Triangle(Point(x3,y3),Point(x1,y_1),Point(x2,y2));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    			}			
+    			else if(x3 <= x1 && x3 <= x2)  //left
+    			{
+    				if(y_1 < y2)
+    				{
+    					Triangle* temp = new Triangle(Point(x3,y3),Point(x1,y_1),Point(x2,y2));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    				else if(y2 < y_1)
+    				{
+    					Triangle* temp = new Triangle(Point(x3,y3),Point(x2,y2),Point(x1,y_1));
+    					delete base;
+    					base = temp;
+    					baseangle = temp->Angle(0);
+    				}
+    			} 
+            }
+       }
         x1=int(base->Element(0).X);
 	    y_1=int(base->Element(0).Y);
 	    x2=int(base->Element(1).X);
@@ -421,13 +425,13 @@ void Show()
     int centerTriX(0);
     int centerTriY(0);
     clear(buffer);
-    int pMinY ;
-    int rMinY;
+    double pMinY ;
+    double rMinY;
     int diff;
+    
    	clear_to_color( buffer, makecol( 255, 255, 255));
-   	line(buffer,0, 75, 1280, 75, makecol(0,0, 0));
-   	
-    line(buffer,640, 75, 640, 640, makecol(0,0, 0));
+   	line(buffer,0, 75, screen_width, 75, makecol(0,0, 0));   	
+    line(buffer,screen_width / 2, 75, screen_width / 2, screen_height, makecol(0,0, 0));
     
     Triangle* temp = (Triangle*)base;
     baseangle = temp->Angle(0); 
@@ -520,46 +524,47 @@ void Show()
  //   triangle(buffer, x1+640, y_1 , x2+640, y2, x3+640, y3, makecol(0, 0, 255));
 	
 	//Text Box
-	line(buffer,0, 75, 1280, 75, makecol(0,0, 0));
-    textout_ex( buffer, font, "Triangle: ", 0, 0,
+	line(buffer,0, 75, screen_width, 75, makecol(0,0, 0));
+    textout_ex( buffer, font, "Triangle: ", 5, 5,
                 makecol( 0, 0, 0), makecol( 255, 255, 255) );
                 
-    rect( buffer, 1150, 40, 1250, 70, makecol( 0, 0, 0));
-    textout_centre_ex( buffer, font, "ANIMATE", 1200, 52, makecol(0,0,0), makecol(255,255,255) );
+    rect( buffer, screen_width - 130, 40, screen_width - 30, 70, makecol( 0, 0, 0));
+    textout_centre_ex( buffer, font, "ANIMATE", screen_width-80, 52, makecol(0,0,0), makecol(255,255,255) );
     
 		//A
-    textprintf_ex( buffer, font, 80,0, makecol(0, 0, 0),
+    textprintf_ex( buffer, font, 80,5, makecol(0, 0, 0),
                    makecol(255, 255, 255),"A: (%-3d,", x1);
-    textprintf_ex( buffer, font, 150,0, makecol(0, 0, 0),
+    textprintf_ex( buffer, font, 150,5, makecol(0, 0, 0),
                    makecol(255, 255, 255), "%-3d)", y_1);
     baseangle = temp->Angle(0);
-    textprintf_ex( buffer, font, 190,0, makecol(0, 0, 0),
+    textprintf_ex( buffer, font, 190,5, makecol(0, 0, 0),
                    makecol(255, 255, 255), "Angle: %d", int(baseangle));
-    textprintf_ex( buffer, font, 280,0, makecol(0, 0, 0),
+    textprintf_ex( buffer, font, 280,5, makecol(0, 0, 0),
                    makecol(255, 255, 255), "A->B: %-3d", 
                    int(distance(x1,y_1,x2,y2)));
 	//B
-    textprintf_ex( buffer, font, 80,10, makecol(0, 0, 0),
+    textprintf_ex( buffer, font, 80,15, makecol(0, 0, 0),
                    makecol(255, 255, 255), "B: (%-3d,", x2);
-    textprintf_ex( buffer, font, 150,10, makecol(0, 0, 0),
+    textprintf_ex( buffer, font, 150,15, makecol(0, 0, 0),
                    makecol(255, 255, 255), "%-3d)", y2);
-    textprintf_ex( buffer, font, 190,10, makecol(0, 0, 0),
+    textprintf_ex( buffer, font, 190,15, makecol(0, 0, 0),
                    makecol(255, 255, 255), "Angle: %-3d", int(base->Angle(1)));
-    textprintf_ex( buffer, font, 280,10, makecol(0, 0, 0),
+    textprintf_ex( buffer, font, 280,15, makecol(0, 0, 0),
                    makecol(255, 255, 255), "B->C: %-3d", 
                    int(distance(x2,y2,x3,y3)));
 	//C
-    textprintf_ex( buffer, font, 80,20, makecol(0, 0, 0),
+    textprintf_ex( buffer, font, 80,25, makecol(0, 0, 0),
                    makecol(255, 255, 255), "C: (%-3d,", x3);
-    textprintf_ex( buffer, font, 150,20, makecol(0, 0, 0),
+    textprintf_ex( buffer, font, 150,25, makecol(0, 0, 0),
                    makecol(255, 255, 255), "%-3d)", y3);
-    textprintf_ex( buffer, font, 190,20, makecol(0, 0, 0),
+    textprintf_ex( buffer, font, 190,25, makecol(0, 0, 0),
                    makecol(255, 255, 255), "Angle: %-3d", int(base->Angle(2)));
-    textprintf_ex( buffer, font, 280,20, makecol(0, 0, 0),
+    textprintf_ex( buffer, font, 280,25, makecol(0, 0, 0),
                    makecol(255, 255, 255), "C->A: %-3d", 
                    int(distance(x1,y_1,x3,y3)));
-	
-	draw_sprite( screen, buffer, 0, 0);
+	//line(buffer,cursor_x-8,cursor_y-8,cursor_x+8,cursor_x+8,makecol(0,0,0));
+	blit(buffer, screen, 0, 0, 0, 0, screen_width, screen_height);
+	show_mouse(screen);
 }
 
 int pointclick(int x1, int y_1, int x2, int y2, int x3, int y3)
@@ -603,8 +608,8 @@ void Animation()
   }
 	Proof P(Ptype, *base);
   Proof R(Rtype,*reflection);
-  int pMinY = P.MinY();
-  int rMinY = R.MinY();
+  double pMinY = P.MinY();
+  double rMinY = R.MinY();
   R.Translate(0, pMinY - rMinY);
 	
 	if(baseangle < 90)
@@ -644,7 +649,7 @@ void Animation()
    	{
   	  clear(buffer);
    	  clear_to_color( buffer, makecol( 255, 255, 255));
-   	  line(buffer,0, 75, 1280, 75, makecol(0,0, 0));
+   	  line(buffer,0, 75, screen_width, 75, makecol(0,0, 0));
       
     if(PminX<=RminX)
 	  {
@@ -684,7 +689,7 @@ void Animation()
 	RminX--;
 	RminY = R.MinY();
 	//Text Box
-	line(buffer,0, 75, 1280, 75, makecol(0,0, 0));
+	line(buffer,0, 75, screen_width, 75, makecol(0,0, 0));
     textout_ex( buffer, font, "Triangle: ", 0, 0,
                 makecol( 0, 0, 0), makecol( 255, 255, 255) );
 		//A
@@ -719,7 +724,7 @@ void Animation()
                    makecol(255, 255, 255), "C->A: %-3d", 
                    int(distance(x1,y_1,x3,y3)));	
     draw_sprite( screen, buffer, 0, 0);
-    rest(5);
+    rest(15);
     }
 }
 
@@ -771,9 +776,9 @@ void Center()
 void reflector(const Polygon* object)
 {
   delete reflection;
-  reflection = new Triangle(Point(object->Element(0).X+640,object->Element(0).Y+110),
-                            Point(object->Element(1).X+640,object->Element(1).Y+110),
-                            Point(object->Element(2).X+640,object->Element(2).Y + 110));
+  reflection = new Triangle(Point(object->Element(0).X+screen_width /2,object->Element(0).Y+110),
+                            Point(object->Element(1).X+screen_width /2,object->Element(1).Y+110),
+                            Point(object->Element(2).X+screen_width /2,object->Element(2).Y + 110));
 }
 /*
     putpixel( buffer, 5, 5, makecol( 128, 200, 23));
