@@ -27,7 +27,8 @@ void drawProof(BITMAP* buffer, const Proof& p);
 int mouseOver(Outline& o);
 Point centerObject(int minX, int minY, int maxX, int maxY, int width, int height);
 double scaleObject(double maxW, double maxH, double width, double height);
-Proof* createProof(const Triangle& tri, PROOF_TYPE type, int width, int height);
+void centerProof(Proof& p, Outline& constrain);
+void moveOutline(Outline& o, Proof& p);
 
 int main() {
     
@@ -46,18 +47,19 @@ int main() {
     #ifdef DEBUG
     debugOut("set allegro options");
     #endif
-    set_mouse_speed(10,10);
+    set_mouse_speed(5,5);
     get_desktop_resolution(&screen_width,&screen_height);
     set_color_depth(desktop_color_depth());
     set_gfx_mode( GFX_AUTODETECT_FULLSCREEN, screen_width, screen_height, 0, 0);
     BITMAP* buffer = create_bitmap(screen_width,screen_height);    
+    show_mouse(screen);
     int screen_midX = screen_width / 2;
     int border = 100;
     int bgColor = makecol(255,255,255);
     int fgColor = makecol(0,0,0);
-    bool redraw = true;
-    Outline points(3);    
-    Triangle* tri;
+    bool redraw = true, rescale = true, wasClicked = false;
+    Outline points(3), reflection(3), leftBox(2),rightBox(2);    
+    Triangle *tri, *refl;
     Proof *leftProof, *rightProof;
 
     #ifdef DEBUG
@@ -71,51 +73,85 @@ int main() {
     points.Element(2).X = 200;
     points.Element(2).Y = 300;
     tri = new Triangle(points.Element(0),points.Element(1),points.Element(2));
+    refl = new Triangle(*tri);
+    refl->Translate(screen_midX,0);
     #ifdef DEBUG
     debugOut("init proofs");
     #endif
-
+    leftBox.Element(0).X = 0;
+    leftBox.Element(0).Y = border;
+    leftBox.Element(1).X = screen_midX;
+    leftBox.Element(1).Y = screen_height;
+    
+    rightBox.Element(0).X = screen_midX;
+    rightBox.Element(0).Y = border;
+    rightBox.Element(1).X = screen_width;
+    rightBox.Element(1).Y = screen_height; 
+    
     if(tri->Angle(0) > 90) {
-                        leftProof = createProof(*tri,LEFT_OBTUSE,screen_midX,screen_height);
-                        rightProof = createProof(*tri,RIGHT_OBTUSE,screen_midX,screen_height);
-                   }
-                   else {
-                        leftProof = createProof(*tri,LEFT_ACUTE,screen_midX,screen_height);
-                        rightProof = createProof(*tri,RIGHT_ACUTE,screen_midX,screen_height);
-                   }
-                   rightProof->Translate(screen_midX,0);
+            leftProof = new Proof(LEFT_OBTUSE,*tri);
+            rightProof = new Proof(RIGHT_OBTUSE,*refl);
+       }
+       else {
+            leftProof = new Proof(LEFT_ACUTE,*tri);
+            rightProof = new Proof(RIGHT_ACUTE,*refl);
+       }
     #ifdef DEBUG
     debugOut("enter loop");
     #endif
 
     while(!key[KEY_ESC]) {
-        #ifdef DEBUG
-        debugOut("Check mouse click");
-        #endif
          if(mouse_b & 1) {
+              wasClicked = true;
               int i = mouseOver(points);
               if(i > -1) {
+                    #ifdef DEBUG
+                    debugOut("Point clicked");
+                    #endif
+
                    points.Element(i).X = mouse_x;
                    points.Element(i).Y = mouse_y;
                    delete leftProof;
                    delete rightProof;
                    delete tri;
+                   delete refl;
                    tri = new Triangle(points.Element(0),points.Element(1),points.Element(2));
+                   refl = new Triangle(*tri);
+                   refl->Translate(screen_midX,0);
                    if(tri->Angle(0) > 90) {
-                        leftProof = createProof(*tri,LEFT_OBTUSE,screen_midX,screen_height-border);
-                        rightProof = createProof(*tri,RIGHT_OBTUSE,screen_midX,screen_height-border);
+                        leftProof = new Proof(LEFT_OBTUSE,*tri);
+                        rightProof = new Proof(RIGHT_OBTUSE,*refl);
                    }
                    else {
-                        leftProof = createProof(*tri,LEFT_ACUTE,screen_midX,screen_height);
-                        rightProof = createProof(*tri,RIGHT_ACUTE,screen_midX,screen_height);
+                        leftProof = new Proof(LEFT_ACUTE,*tri);
+                        rightProof = new Proof(RIGHT_ACUTE,*refl);
                    }
-                   leftProof->Translate(0,border);
-                   rightProof->Translate(screen_midX,border);
                    redraw = true;
               }
          }
-         else if(mouse_b & 2) {
-              //Switch main angle
+         else {
+                    #ifdef DEBUG
+                    debugOut("Mouse 1 not clicked");
+                    #endif
+              if(wasClicked) {
+                                   #ifdef DEBUG
+                    debugOut("set rescale");
+                    #endif
+                   wasClicked = false;
+                   rescale = true;
+              }
+         }
+         if(mouse_b & 2) {
+                    #ifdef DEBUG
+                    debugOut("Mouse 2 clicked");
+                    #endif
+              redraw = true;
+         }
+         if(rescale) {
+              rescale = false;
+              centerProof(*leftProof,leftBox);
+              centerProof(*rightProof,rightBox);
+              moveOutline(points,*leftProof);
               redraw = true;
          }
          if(redraw) {
@@ -143,6 +179,7 @@ int main() {
              redraw = false;
          }
          blit(buffer,screen,0,0,0,0,screen_width,screen_height);
+         show_mouse(screen);
          rest(50);
     }
     
@@ -167,16 +204,23 @@ void drawProof(BITMAP* buffer, const Proof& p) {
 
 int mouseOver(Outline& o) {
     for(unsigned int i = 0; i < o.Size(); i++)
-        if(mouse_x > o.Element(i).X - 5 && mouse_x < o.Element(i).X + 5)
-             if(mouse_y > o.Element(i).Y - 5 && mouse_y < o.Element(i).Y + 5)
+        if(mouse_x > o.Element(i).X - 10 && mouse_x < o.Element(i).X + 10)
+             if(mouse_y > o.Element(i).Y - 10 && mouse_y < o.Element(i).Y + 10)
                  return i;
     return -1;
 }
 
 Point centerObject(int minX, int minY, int maxX, int maxY, int width, int height) {
       Point result;
-      result.X = ((maxX - minX) - width) / 2;
-      result.Y = ((maxY - minY) - height) / 2;
+      result.X = ((maxX - minX) - width) / 2 + minX;
+      result.Y = ((maxY - minY) - height) / 2 + minY;
+    #ifdef DEBUG
+    std::stringstream ss;
+    ss << "Center:" << "\tminX: " << minX << ", minY: " << minY << ", maxX: " << maxX << ", maxY: " << maxY << ", width: " << width << ", height: " << height << std::endl;
+    ss << "offsetX: " << result.X << ", offsetY: " << result.Y << std::endl;
+    debugOut(ss.str());
+    #endif
+    return result;
 }
 
 double scaleObject(double maxW, double maxH, double width, double height) {
@@ -189,21 +233,23 @@ double scaleObject(double maxW, double maxH, double width, double height) {
        return result;
 }
 
-Proof* createProof(const Triangle& tri, PROOF_TYPE type, int width, int height) {
-       
-Proof* temp = new Proof(type,tri);
-temp->Scale(scaleObject((double)width,height,temp->Width(),temp->Height()));
-Point offset = centerObject(0,0,width,height,int(temp->Width()),int(temp->Height()));
-#ifdef DEBUG
-std::stringstream ss;
-ss << "\tProof MinX: " << temp->MinX() << ", MinY:" << temp->MinY() << ", Scale:";
-debugOut(ss.str());
-#endif
-temp->Translate(temp->MinX() + (offset.X - temp->MinX()),temp->MinY() + (offset.Y - temp->MinY()));
-#ifdef DEBUG
-ss.str("");
-ss << "\tTranslate Proof MinX: " << temp->MinX() << ", MinY:" << temp->MinY();
-debugOut(ss.str());
-#endif
-return temp;
+void centerProof(Proof& p, Outline& constrain) {
+double width, height, scale;
+
+width = constrain.Element(1).X - constrain.Element(0).X;
+height = constrain.Element(1).Y - constrain.Element(0).Y;
+scale = scaleObject(width,height,p.Width(), p.Height());
+
+p.Scale(scale);
+Point offset = centerObject((int)constrain.Element(0).X,(int)constrain.Element(0).Y,(int)constrain.Element(1).X,(int)constrain.Element(1).Y,int(p.Width()),int(p.Height()));
+p.Translate(offset.X-p.MinX(),offset.Y-p.MinY());
+     
+}
+
+
+void moveOutline(Outline& o, Proof& p) {
+     for(int i = 0; i < 3; i++) {
+         o.Element(i).X = p.Shape(0).Shape().Element(i).X;
+         o.Element(i).Y = p.Shape(0).Shape().Element(i).Y;
+     }
 }
