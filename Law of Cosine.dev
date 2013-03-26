@@ -1,6 +1,6 @@
 [Project]
 FileName=Law of Cosine.dev
-Name=Project1
+Name=LawOfCosines
 UnitCount=9
 Type=0
 Ver=1
@@ -29,27 +29,7 @@ SupportXPThemes=0
 CompilerSet=0
 CompilerSettings=0000000000000001000000
 
-[Unit1]
-FileName=main.cpp
-CompileCpp=1
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit2]
-FileName=outline.cpp
-CompileCpp=1
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit3]
 FileName=parallelogram.cpp
 CompileCpp=1
 Folder=
@@ -59,7 +39,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit4]
+[Unit3]
 FileName=point.cpp
 CompileCpp=1
 Folder=
@@ -69,7 +49,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit5]
+[Unit4]
 FileName=polygon.cpp
 CompileCpp=1
 Folder=
@@ -79,7 +59,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit6]
+[Unit5]
 FileName=screenpolygon.cpp
 CompileCpp=1
 Folder=
@@ -89,7 +69,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit7]
+[Unit6]
 FileName=triangle.cpp
 CompileCpp=1
 Folder=
@@ -99,7 +79,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit8]
+[Unit7]
 FileName=geometry.cpp
 CompileCpp=1
 Folder=
@@ -109,10 +89,20 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
+[Unit8]
 FileName=proof.cpp
 CompileCpp=1
 Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit9]
+FileName=newmain.cpp
+CompileCpp=1
+Folder=LawOfCosines
 Compile=1
 Link=1
 Priority=1000
@@ -209,6 +199,16 @@ BuildCmd=
 
 [Unit17]
 FileName=proof.cpp
+CompileCpp=1
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit1]
+FileName=outline.cpp
 CompileCpp=1
 Folder=
 Compile=1
