@@ -43,10 +43,6 @@ int main() {
     allegro_init();
     install_keyboard();
     install_mouse();
-
-    #ifdef DEBUG
-    debugOut("set allegro options");
-    #endif
     set_mouse_speed(5,5);
     get_desktop_resolution(&screen_width,&screen_height);
     set_color_depth(desktop_color_depth());
@@ -57,7 +53,8 @@ int main() {
     int border = 100;
     int bgColor = makecol(255,255,255);
     int fgColor = makecol(0,0,0);
-    bool redraw = true, rescale = true, wasClicked = false;
+    bool redraw = true, rescale = true;
+    int wasClicked = -1;
     Outline points(3), reflection(3), leftBox(2),rightBox(2);    
     Triangle *tri, *refl;
     Proof *leftProof, *rightProof;
@@ -102,15 +99,14 @@ int main() {
 
     while(!key[KEY_ESC]) {
          if(mouse_b & 1) {
-              wasClicked = true;
-              int i = mouseOver(points);
-              if(i > -1) {
+              wasClicked = (wasClicked == -1) ? mouseOver(points) : wasClicked;
+              if(wasClicked > -1) {
                     #ifdef DEBUG
                     debugOut("Point clicked");
                     #endif
 
-                   points.Element(i).X = mouse_x;
-                   points.Element(i).Y = mouse_y;
+                   points.Element(wasClicked).X = mouse_x;
+                   points.Element(wasClicked).Y = mouse_y;
                    delete leftProof;
                    delete rightProof;
                    delete tri;
@@ -133,11 +129,11 @@ int main() {
                     #ifdef DEBUG
                     debugOut("Mouse 1 not clicked");
                     #endif
-              if(wasClicked) {
+              if(wasClicked > -1) {
                                    #ifdef DEBUG
                     debugOut("set rescale");
                     #endif
-                   wasClicked = false;
+                   wasClicked = -1;
                    rescale = true;
               }
          }
@@ -155,26 +151,10 @@ int main() {
               redraw = true;
          }
          if(redraw) {
-            #ifdef DEBUG
-            debugOut("redraw");
-            #endif
-
              clear_to_color(buffer,bgColor);
-             #ifdef DEBUG
-             debugOut("\tinterface");
-             #endif
              drawInterface(buffer,screen_width,screen_height,border,fgColor);
-             #ifdef DEBUG
-             debugOut("\ttriangle");
-             #endif
              drawTriangleInfo(buffer,points);
-             #ifdef DEBUG
-             debugOut("\tleftProof");
-             #endif
              drawProof(buffer,*leftProof);
-             #ifdef DEBUG
-             debugOut("\trightProof");
-             #endif
              drawProof(buffer,*rightProof);
              redraw = false;
          }
