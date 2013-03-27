@@ -5,6 +5,7 @@
 #include "outline.h"
 #include <allegro.h>
 using namespace std;
+int getShapeColor(PROOF_TYPE t,unsigned int index);
 
 Proof::~Proof()
 {
@@ -132,7 +133,7 @@ void Proof::doLeftAcute(const Triangle& t)
     Polygon* Shape;
     Shape = new Triangle(t.Element(0), t.Element(1), t.Element(2));
     myShapes[0] = new ScreenPolygon(Shape);
-    myShapes[0]->Color = makecol(0,0,255); //blue
+    myShapes[0]->Color = getShapeColor(LEFT_ACUTE,0); //blue
 
     //starting to set up outline
     outline->Element(0) = t.Element(0);
@@ -160,24 +161,24 @@ void Proof::doLeftAcute(const Triangle& t)
     }
     else
     {
-//        switch(Direction(p1,p2))
+        switch(Direction(p1,p2))
         {
-//            case WEST:
-//            case EAST:
-//                 p3.Y = p2.Y + length * horizontalY(p2,t.Element(1));
-//                 p3.X = p2.X;
-//                 break;
-//            case NORTH:
-//            case SOUTH:
-//                 p3.X = p2.X + length * verticalX(p2,t.Element(1));
-//                 p3.Y = p2.Y;
-//                 break;
+            case WEST:
+            case EAST:
+                 p3.Y = p2.Y + length * horizontalY(p2,t.Element(1));
+                 p3.X = p2.X;
+                 break;
+            case NORTH:
+            case SOUTH:
+                 p3.X = p2.X + length * verticalX(p2,t.Element(1));
+                 p3.Y = p2.Y;
+                 break;
         }
     }
 
     Shape = new Parallelogram(p1, p2, p3);
     myShapes[1] = new ScreenPolygon(Shape);
-    myShapes[1]->Color = makecol(255,0,0);//red
+    myShapes[1]->Color = getShapeColor(LEFT_ACUTE,1);//red
 
     //continuing to write outline.
     outline->Element(5) = Shape->Element(2);
@@ -199,24 +200,24 @@ void Proof::doLeftAcute(const Triangle& t)
     }
     else
     {
-//        switch(Direction(p1,p2))
+        switch(Direction(p1,p2))
         {
-//            case WEST:
-//            case EAST:
-//                 p3.Y = p2.Y + length * horizontalY(p2,t.Element(1));
-//                 p3.X = p2.X;
-//                 break;
-//            case NORTH:
-//            case SOUTH:
-//                 p3.X = p2.X + length * verticalX(p2,t.Element(1));
-//                 p3.Y = p2.Y;
-//                 break;
+            case WEST:
+            case EAST:
+                 p3.Y = p2.Y + length * horizontalY(p2,t.Element(1));
+                 p3.X = p2.X;
+                 break;
+            case NORTH:
+            case SOUTH:
+                 p3.X = p2.X + length * verticalX(p2,t.Element(1));
+                 p3.Y = p2.Y;
+                 break;
         }
     }
 
     Shape = new Parallelogram(p1, p2, p3);
     myShapes[2] = new ScreenPolygon(Shape);
-    myShapes[2]->Color = makecol(0,255,0);//green
+    myShapes[2]->Color = getShapeColor(LEFT_ACUTE,2);//green
 
     //continuing to write outline.
     outline->Element(2) = Shape->Element(2);
@@ -233,7 +234,7 @@ void Proof::doLeftAcute(const Triangle& t)
 
     Shape = new Triangle(p1,p2,p3);
     myShapes[3] = new ScreenPolygon(Shape);
-    myShapes[3]->Color = makecol(255,223,223);//pink
+    myShapes[3]->Color = getShapeColor(LEFT_ACUTE,3);//pink
 
     //finish the last point of the outline.
     outline->Element(4) = Shape->Element(2);
@@ -246,7 +247,7 @@ void Proof::doLeftAcute(const Triangle& t)
 
     Shape = new Triangle(p1,p2,p3);
     myShapes[4] = new ScreenPolygon(Shape);
-    myShapes[4]->Color = makecol(255,165,0);//orange
+    myShapes[4]->Color = getShapeColor(LEFT_ACUTE,4);//orange
     
     width = minX = outline->Element(0).X;
     height = minY = outline->Element(0).Y;
@@ -268,7 +269,6 @@ void Proof::doLeftAcute(const Triangle& t)
     width = width-minX;
     height = height-minY;
 
-    //Go home Pi Day. You're drunk.
 }
 
 void Proof::doRightAcute(const Triangle& t)
@@ -282,7 +282,7 @@ void Proof::doRightAcute(const Triangle& t)
     Polygon* Shape;
     Shape = new Triangle(t.Element(0), t.Element(1), t.Element(2));
     myShapes[0] = new ScreenPolygon(Shape);//set Main Triangle into myShapes
-    myShapes[0]->Color = makecol(0,0,255); //blue
+    myShapes[0]->Color = getShapeColor(RIGHT_ACUTE,0); //blue
 
     //start outline
     outline->Element(4) = t.Element(0);
@@ -308,25 +308,25 @@ void Proof::doRightAcute(const Triangle& t)
     }
     else
     {
-//        switch(Direction(p1,p2))
+        switch(Direction(p1,p2))
         {
-//            case WEST:
-//            case EAST:
-//                 p3.Y = p2.Y + length * horizontalY(p2,t.Element(0));
-//                 p3.X = p2.X;
-//                 break;
-//            case NORTH:
-//            case SOUTH:
-//                 p3.X = p2.X + length * verticalX(p2,t.Element(0));
-//                 p3.Y = p2.Y;
-//                 break;
+            case WEST:
+            case EAST:
+                 p3.Y = p2.Y + length * horizontalY(p2,t.Element(0));
+                 p3.X = p2.X;
+                 break;
+            case NORTH:
+            case SOUTH:
+                 p3.X = p2.X + length * verticalX(p2,t.Element(0));
+                 p3.Y = p2.Y;
+                 break;
         }
     }
     
 
     Shape = new Parallelogram(p1, p2, p3);
     myShapes[1] = new ScreenPolygon(Shape);
-    myShapes[1]->Color = makecol(255,0,0);//red
+    myShapes[1]->Color = getShapeColor(RIGHT_ACUTE,1);//red
 
     //continuing to write outline
     outline->Element(0) = Shape->Element(2);
@@ -339,8 +339,19 @@ void Proof::doRightAcute(const Triangle& t)
     p1 = Shape->Element(1);
     p2 = Shape->Element(2);
 
-    dir = drawDirection(p2,p1,t.Element(0));
+//    dir = Direction(myShapes[0].Element(0),myShapes[0].Element(1),p1);
     length = t.Element(0).Distance(t.Element(1));
+    //switch(dir) {
+//    case NORTH:
+//    case SOUTH:
+//         dir = (dir == NORTH) ? 1 : -1;
+//         p3.X = p1.X;
+//         p3.Y = p3.Y + (myShapes[0].Element(0).Distance(myShapes[0].Element(1)) * dir;
+//         break;
+//    case WEST:
+//    case EAST:     
+//    }
+    dir = drawDirection(t.Element(0),t.Element(1),t.Element(2));
     if(dir)
     {
            slant = t.Element(0).Perpendicular(t.Element(1));
@@ -348,24 +359,24 @@ void Proof::doRightAcute(const Triangle& t)
     }
     else
     {
-//        switch(Direction(p1,p2))
+        switch(Direction(t.Element(0),t.Element(1)))
         {
-//            case WEST:
-//            case EAST:
-//                 p3.Y = p2.Y + length * horizontalY(p2,Shape->Element(3));
-//                 p3.X = p2.X;
-//                 break;
-//            case NORTH:
-//            case SOUTH:
-//                 p3.X = p2.X + length * verticalX(p2,Shape->Element(3));
-//                 p3.Y = p2.Y;
-//                 break;
+            case WEST:
+            case EAST:
+                 p3.Y = p2.Y + length * horizontalY(p2,Shape->Element(3));
+                 p3.X = p2.X;
+                 break;
+            case NORTH:
+            case SOUTH:
+                 p3.X = p2.X + length * verticalX(p2,Shape->Element(3));
+                 p3.Y = p2.Y;
+                 break;
         }
     }
 
     Shape = new Triangle(p1,p2,p3);
     myShapes[2] = new ScreenPolygon(Shape);
-    myShapes[2]->Color = makecol(255,223,223);//pink
+    myShapes[2]->Color = getShapeColor(RIGHT_ACUTE,2);//pink
 
     //continuing to write outline
     outline->Element(6) = Shape->Element(2);
@@ -380,7 +391,7 @@ void Proof::doRightAcute(const Triangle& t)
 
     Shape = new Parallelogram(p1,p2,p3);
     myShapes[3] = new ScreenPolygon(Shape);
-    myShapes[3]->Color = makecol(255,255,0);//yellow
+    myShapes[3]->Color = getShapeColor(RIGHT_ACUTE,3);//yellow
 
     //continuing to write outline
     outline->Element(5) = Shape->Element(3);
@@ -401,24 +412,24 @@ void Proof::doRightAcute(const Triangle& t)
     }
     else
     {
-//        switch(Direction(p1,p2))
+        switch(Direction(t.Element(0),t.Element(1)))
         {
-//            case WEST:
-//            case EAST:
-//                 p3.Y = p2.Y + length * horizontalY(p2,t.Element(1));
-//                 p3.X = p2.X;
-//                 break;
-//            case NORTH:
-//            case SOUTH:
-//                 p3.X = p2.X + length * verticalX(p2,t.Element(1));
-//                 p3.Y = p2.Y;
-//                 break;
+            case WEST:
+            case EAST:
+                 p3.Y = p2.Y - (t.Element(2).Y - t.Element(0).Y);
+                 p3.X = p2.X;
+                 break;
+            case NORTH:
+            case SOUTH:
+                 p3.X = p2.X  - (t.Element(2).X - t.Element(0).X);
+                 p3.Y = p2.Y;
+                 break;
         }
     }
 
     Shape = new Parallelogram(p1,p2,p3);
     myShapes[4] = new ScreenPolygon(Shape);
-    myShapes[4]->Color = makecol(255,0,255);//purple
+    myShapes[4]->Color = getShapeColor(RIGHT_ACUTE,4);//purple
 
     //done writing outline
     outline->Element(2) = Shape->Element(2);
@@ -434,7 +445,7 @@ void Proof::doRightAcute(const Triangle& t)
 
     Shape = new Triangle(p1,p2,p3);
     myShapes[5] = new ScreenPolygon(Shape);
-    myShapes[5]->Color = makecol(255,165,0);//orange
+    myShapes[5]->Color = getShapeColor(RIGHT_ACUTE,5);//orange
     
     width = minX = outline->Element(0).X;
     height = minY = outline->Element(0).Y;
@@ -472,7 +483,7 @@ void Proof::doLeftObtuse(const Triangle& t)
     Polygon* Shape;
     Shape = new Triangle(t.Element(0), t.Element(1), t.Element(2));
     myShapes[0] = new ScreenPolygon(Shape);//set Main Triangle into myShapes
-    myShapes[0]->Color = makecol(0,0,255); //blue
+    myShapes[0]->Color = getShapeColor(LEFT_OBTUSE,0); //blue
 
     //start outline
     outline->Element(0) = t.Element(1);
@@ -495,24 +506,24 @@ void Proof::doLeftObtuse(const Triangle& t)
     }
     else
     {
-//        switch(Direction(p1,p2))
+        switch(Direction(p1,p2))
         {
-//            case WEST:
-//            case EAST:
-//                 p3.Y = p2.Y + length * horizontalY(p1,t.Element(1));
-//                 p3.X = p2.X;
-//                 break;
-//            case NORTH:
-//            case SOUTH:
-//                 p3.X = p2.X + length * verticalX(p1,t.Element(1));
-//                 p3.Y = p2.Y;
-//                 break;
+            case WEST:
+            case EAST:
+                 p3.Y = p2.Y + length * horizontalY(p1,t.Element(1));
+                 p3.X = p2.X;
+                 break;
+            case NORTH:
+            case SOUTH:
+                 p3.X = p2.X + length * verticalX(p1,t.Element(1));
+                 p3.Y = p2.Y;
+                 break;
         }
     }
 
     Shape = new Parallelogram(p1,p2,p3);
     myShapes[1] = new ScreenPolygon(Shape);
-    myShapes[1]->Color = makecol(255,0,0); //cardinal red
+    myShapes[1]->Color = getShapeColor(LEFT_OBTUSE,1); //cardinal red
 
     //continuing outline
     outline->Element(2) = Shape->Element(3);
@@ -527,7 +538,7 @@ void Proof::doLeftObtuse(const Triangle& t)
 
     Shape = new Parallelogram(p1,p2,p3);
     myShapes[2] = new ScreenPolygon(Shape);
-    myShapes[2]->Color = makecol(255,255,0);//yellow
+    myShapes[2]->Color = getShapeColor(LEFT_OBTUSE,2);//yellow
 
     /******************
     create first triangle
@@ -535,7 +546,7 @@ void Proof::doLeftObtuse(const Triangle& t)
     p1 = t.Element(1);
     p2 = Shape->Element(3);
 
-    dir = drawDirection(p2,p1,Shape->Element(2));
+    dir = drawDirection(t.Element(0),t.Element(1),t.Element(2));
     length = t.Element(0).Distance(t.Element(1));
     if(dir)
     {
@@ -544,24 +555,24 @@ void Proof::doLeftObtuse(const Triangle& t)
     }
     else
     {
-//        switch(Direction(p1,p2))
+        switch(Direction(p1,t.Element(0)))
         {
-//            case WEST:
-//            case EAST:
-//                 p3.Y = p2.Y + length * horizontalY(p1,t.Element(1));
-//                 p3.X = p2.X;
-//                 break;
-//            case NORTH:
-//            case SOUTH:
-//                 p3.X = p2.X + length * verticalX(p1,t.Element(1));
-//                 p3.Y = p2.Y;
-//                 break;
+            case WEST:
+            case EAST:
+                 p3.Y = p2.Y + length * horizontalY(p1,p2);
+                 p3.X = p2.X;
+                 break;
+            case NORTH:
+            case SOUTH:
+                 p3.X = p2.X + length * verticalX(p1,p2);
+                 p3.Y = p2.Y;
+                 break;
         }
     }
 
     Shape = new Triangle(p1,p2,p3);
     myShapes[3] = new ScreenPolygon(Shape);
-    myShapes[3]->Color = makecol(255,0,255);//purple
+    myShapes[3]->Color = getShapeColor(LEFT_OBTUSE,3);//purple
 
     //continuing outline
     outline->Element(5) = Shape->Element(2);
@@ -576,7 +587,7 @@ void Proof::doLeftObtuse(const Triangle& t)
 
     Shape = new Parallelogram(p1,p2,p3);
     myShapes[4] = new ScreenPolygon(Shape);
-    myShapes[4]->Color = makecol(0,255,0);//green
+    myShapes[4]->Color = getShapeColor(LEFT_OBTUSE,4);//green
 
     //continuing outline
     outline->Element(4)=Shape->Element(3);
@@ -591,7 +602,7 @@ void Proof::doLeftObtuse(const Triangle& t)
     
     Shape = new Parallelogram(p1,p2,p3);
     myShapes[5] = new ScreenPolygon(Shape);
-    myShapes[5]->Color = makecol(255,0,255);//purple
+    myShapes[5]->Color = getShapeColor(LEFT_OBTUSE,5);//purple
 
     //finishing outline
     outline->Element(3) = Shape->Element(3);
@@ -632,7 +643,7 @@ void Proof::doRightObtuse(const Triangle& t)
     Polygon* Shape;
     Shape = new Triangle(t.Element(0), t.Element(1), t.Element(2));
     myShapes[0] = new ScreenPolygon(Shape);//set Main Triangle into myShapes
-    myShapes[0]->Color = makecol(0,0,255); //blue
+    myShapes[0]->Color = getShapeColor(RIGHT_OBTUSE,0); //blue
 
     //writing outline
     outline->Element(0) = t.Element(1);
@@ -658,24 +669,24 @@ void Proof::doRightObtuse(const Triangle& t)
     }
     else
     {
-//        switch(Direction(p1,p2))
+        switch(Direction(p1,p2))
         {
-//            case WEST:
-//            case EAST:
-//                 p3.Y = p1.Y + length * horizontalY(p1,t.Element(0));
-//                 p3.X = p1.X;
-//                 break;
-//            case NORTH:
-//            case SOUTH:
-//                 p3.X = p1.X + length * verticalX(p1,t.Element(0));
-//                 p3.Y = p1.Y;
-//                 break;
+            case WEST:
+            case EAST:
+                 p3.Y = p1.Y + length * horizontalY(p1,t.Element(0));
+                 p3.X = p1.X;
+                 break;
+            case NORTH:
+            case SOUTH:
+                 p3.X = p1.X + length * verticalX(p1,t.Element(0));
+                 p3.Y = p1.Y;
+                 break;
         }
     }
 
     Shape = new Parallelogram(p1,p2,p3);
     myShapes[1] = new ScreenPolygon(Shape);
-    myShapes[1]->Color = makecol(255,0,0);//red
+    myShapes[1]->Color = getShapeColor(RIGHT_OBTUSE,1);//red
 
     //continue with outline
     outline->Element(1) = Shape->Element(2);
@@ -688,7 +699,7 @@ void Proof::doRightObtuse(const Triangle& t)
     p1 = Shape->Element(3);
     p2 = Shape->Element(0);
     
-    dir = drawDirection(p1,p2,Shape->Element(2));
+    dir = drawDirection(t.Element(1),t.Element(2),t.Element(0));
     length = t.Element(0).Distance(t.Element(2));
     //cout<<"length: "<<horizontalY(p1,Shape->Element(2))<<endl;
     if(dir)
@@ -699,18 +710,18 @@ void Proof::doRightObtuse(const Triangle& t)
     }
     else
     {
-//        switch(Direction(p1,p2))
+        switch(Direction(p1,p2))
         {
-//            case WEST:
-//            case EAST:
-//                 p3.Y = p1.Y + length * horizontalY(p1,Shape->Element(2));
-//                 p3.X = p1.X;
-//                 break;
-//            case NORTH:
-//            case SOUTH:
-//                 p3.X = p1.X + length * verticalX(p1,Shape->Element(2));
-//                 p3.Y = p1.Y;
-//                 break;
+            case WEST:
+            case EAST:
+                 p3.Y = p1.Y + length * horizontalY(p1,Shape->Element(2));
+                 p3.X = p1.X;
+                 break;
+            case NORTH:
+            case SOUTH:
+                 p3.X = p1.X + length * verticalX(p1,Shape->Element(2));
+                 p3.Y = p1.Y;
+                 break;
         }
 
     }
@@ -735,7 +746,7 @@ void Proof::doRightObtuse(const Triangle& t)
 
     Shape = new Triangle(p1,p2,p3);
     myShapes[2] = new ScreenPolygon(Shape);
-    myShapes[2]->Color = makecol(255,223,223);//pink
+    myShapes[2]->Color = getShapeColor(RIGHT_OBTUSE,2);//pink
     //cout<<"after myShapes"<<endl;
     //done with outline
     outline->Element(3) = Shape->Element(1);
@@ -881,4 +892,22 @@ double Proof::horizontalY(const Point& p1, const Point& p3) {
     case SOUTHWEST:
         return -1;
     }
+}
+
+
+int getShapeColor(PROOF_TYPE t,unsigned int index) {
+     int result = makecol(64,64,255);
+     if(index) {
+          switch(t) {
+          case LEFT_ACUTE:
+          case LEFT_OBTUSE:
+               result = makecol(255,(40 * index),(40 * index));
+               break;
+          case RIGHT_ACUTE:
+          case RIGHT_OBTUSE:
+               result = makecol(64,255 - (30 * index),64);
+               break;
+          }
+     }
+     return result;
 }
