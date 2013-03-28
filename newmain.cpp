@@ -63,12 +63,12 @@ int main() {
     debugOut("init points");
     #endif
 
-    points.Element(0).X = 10;
-    points.Element(0).Y = 150;
+    points.Element(2).X = 10;
+    points.Element(2).Y = 150;
     points.Element(1).X = 100;
     points.Element(1).Y = 200;
-    points.Element(2).X = 200;
-    points.Element(2).Y = 300;
+    points.Element(0).X = 200;
+    points.Element(0).Y = 300;
     tri = new Triangle(points.Element(0),points.Element(1),points.Element(2));
     refl = new Triangle(*tri);
     refl->Translate(screen_midX,0);
@@ -210,6 +210,12 @@ double scaleObject(double maxW, double maxH, double width, double height) {
        result = (scaleH < scaleW) ? scaleH : scaleW;
        if(result > 1)
             result = 1;
+#ifdef DEBUG
+    std::stringstream ss;
+    ss << "\tScale:" << result;
+    debugOut(ss.str());
+#endif
+
        return result;
 }
 
