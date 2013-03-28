@@ -339,18 +339,7 @@ void Proof::doRightAcute(const Triangle& t)
     p1 = Shape->Element(1);
     p2 = Shape->Element(2);
 
-//    dir = Direction(myShapes[0].Element(0),myShapes[0].Element(1),p1);
     length = t.Element(0).Distance(t.Element(1));
-    //switch(dir) {
-//    case NORTH:
-//    case SOUTH:
-//         dir = (dir == NORTH) ? 1 : -1;
-//         p3.X = p1.X;
-//         p3.Y = p3.Y + (myShapes[0].Element(0).Distance(myShapes[0].Element(1)) * dir;
-//         break;
-//    case WEST:
-//    case EAST:     
-//    }
     dir = drawDirection(t.Element(0),t.Element(1),t.Element(2));
     if(dir)
     {
@@ -405,28 +394,30 @@ void Proof::doRightAcute(const Triangle& t)
 
     dir = drawDirection(p2,p1,t.Element(1));
     length = t.Element(0).Distance(t.Element(1));
-    if(dir)
-    {
-           slant = t.Element(0).Perpendicular(t.Element(1));
-           p3 = p2.Segment(slant, dir * length);
-    }
-    else
-    {
-        switch(Direction(t.Element(0),t.Element(1)))
-        {
-            case WEST:
-            case EAST:
-                 p3.Y = p2.Y - (t.Element(2).Y - t.Element(0).Y);
-                 p3.X = p2.X;
-                 break;
-            case NORTH:
-            case SOUTH:
-                 p3.X = p2.X  - (t.Element(2).X - t.Element(0).X);
-                 p3.Y = p2.Y;
-                 break;
-        }
-    }
-
+    switch(Direction(p1,t.Element(1))) {
+        case NORTHWEST:
+        case NORTHEAST:
+        case SOUTHWEST:
+        case SOUTHEAST:
+            if(dir) { 
+                slant = t.Element(0).Perpendicular(t.Element(1));
+                p3 = p2.Segment(slant, dir * length);
+                break;
+            }
+            else {
+                
+            }
+        case WEST:
+        case EAST:
+            p3.Y = p2.Y - (t.Element(2).Y - t.Element(0).Y);
+            p3.X = p2.X;
+            break;
+        case NORTH:
+        case SOUTH:
+            p3.X = p2.X  - (t.Element(2).X - t.Element(0).X);
+            p3.Y = p2.Y;
+            break;
+   }
     Shape = new Parallelogram(p1,p2,p3);
     myShapes[4] = new ScreenPolygon(Shape);
     myShapes[4]->Color = getShapeColor(RIGHT_ACUTE,4);//purple
