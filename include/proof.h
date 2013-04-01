@@ -29,10 +29,11 @@ public:
     void Scale(double s);
     void Translate(double X, double Y);
 private:
-    double verticalX(const Point& p1, const Point& p3);
-    double horizontalY(const Point& p1, const Point& p3);
+    //double verticalX(const Point& p1, const Point& p3);
+    //double horizontalY(const Point& p1, const Point& p3);
     DIR Direction(const Point& p1, const Point& p2);
-    double drawDirection(const Point& p1, const Point& p2, const Point& p3);
+    Point getPerpendicular(Point vertex, Point shared, Point unshared, double distance, Point slopeStart, Point slopeStop);
+    //double drawDirection(const Point& p1, const Point& p2, const Point& p3);
     void doLeftAcute(const Triangle& t);
     void doRightAcute(const Triangle& t);
     void doLeftObtuse(const Triangle& t);
