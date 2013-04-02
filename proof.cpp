@@ -151,31 +151,8 @@ void Proof::doLeftAcute(const Triangle& t)
     p1 = t.Element(1);
     p2 = t.Element(0);
 
-    double dir;
-    //dir = drawDirection(p2,p1,t.Element(2));
     length = p1.Distance(p2);
-    p3 = getPerpendicular(p1,p2,t.Element(2),length,p1,p2);
-    //if(dir)
-//    {
-//           slant = p1.Perpendicular(p2);
-//           p3 = p2.Segment(slant, dir * length);
-//    }
-//    else
-//    {
-//        switch(Direction(p1,p2))
-//        {
-//            case WEST:
-//            case EAST:
-//                 p3.Y = p2.Y + length * horizontalY(p2,t.Element(1));
-//                 p3.X = p2.X;
-//                 break;
-//            case NORTH:
-//            case SOUTH:
-//                 p3.X = p2.X + length * verticalX(p2,t.Element(1));
-//                 p3.Y = p2.Y;
-//                 break;
-//        }
-//    }
+    p3 = getPerpendicular(p2,p1,t.Element(2),length,p1,p2);
 
     Shape = new Parallelogram(p1, p2, p3);
     myShapes[1] = new ScreenPolygon(Shape);
@@ -192,30 +169,8 @@ void Proof::doLeftAcute(const Triangle& t)
     p1 = t.Element(0);//thirds point of triangle
     p2 = t.Element(2);//second point of triangle
 
-//    dir = drawDirection(p2,p1,t.Element(1));
     length = p1.Distance(p2);
     p3 = getPerpendicular(p2,p1,t.Element(1),length,p1,p2);
-//    if(dir)
-//    {
-//           slant = t.Element(0).Perpendicular(t.Element(2));
-//           p3 = p2.Segment(slant, dir * length);
-//    }
-//    else
-//    {
-//        switch(Direction(p1,p2))
-//        {
-//            case WEST:
-//            case EAST:
-//                 p3.Y = p2.Y + length * horizontalY(p2,t.Element(1));
-//                 p3.X = p2.X;
-//                 break;
-//            case NORTH:
-//            case SOUTH:
-//                 p3.X = p2.X + length * verticalX(p2,t.Element(1));
-//                 p3.Y = p2.Y;
-//                 break;
-//        }
-//    }
 
     Shape = new Parallelogram(p1, p2, p3);
     myShapes[2] = new ScreenPolygon(Shape);
@@ -300,31 +255,8 @@ void Proof::doRightAcute(const Triangle& t)
     p1 = t.Element(2);//thirds point of triangle
     p2 = t.Element(1);//second point of triangle
     
-    double dir;
-//    dir = drawDirection(p2,p1,t.Element(0));
     length = p1.Distance(p2);
-    p3 = getPerpendicular(p2,p1,t.Element(0),p1,p2);
-//    if(dir)
-//    {
-//           slant = p1.Perpendicular(p2);
-//           p3 = p2.Segment(slant, dir * length);
-//    }
-//    else
-//    {
-//        switch(Direction(p1,p2))
-//        {
-//            case WEST:
-//            case EAST:
-//                 p3.Y = p2.Y + length * horizontalY(p2,t.Element(0));
-//                 p3.X = p2.X;
-//                 break;
-//            case NORTH:
-//            case SOUTH:
-//                 p3.X = p2.X + length * verticalX(p2,t.Element(0));
-//                 p3.Y = p2.Y;
-//                 break;
-//        }
-//    }
+    p3 = getPerpendicular(p2,p1,t.Element(0),length,p1,p2);
     
 
     Shape = new Parallelogram(p1, p2, p3);
@@ -343,29 +275,7 @@ void Proof::doRightAcute(const Triangle& t)
     p2 = Shape->Element(2);
 
     length = t.Element(0).Distance(t.Element(1));
-    p3 = getPerpendicular(p1,p2,t.Element(0),length,p1,t.Element(0));
-//    dir = drawDirection(t.Element(0),t.Element(1),t.Element(2));
-//    if(dir)
-//    {
-//           slant = t.Element(0).Perpendicular(t.Element(1));
-//           p3 = p2.Segment(slant, dir * length);
-//    }
-//    else
-//    {
-//        switch(Direction(t.Element(0),t.Element(1)))
-//        {
-//            case WEST:
-//            case EAST:
-//                 p3.Y = p2.Y + length * horizontalY(p2,Shape->Element(3));
-//                 p3.X = p2.X;
-//                 break;
-//            case NORTH:
-//            case SOUTH:
-//                 p3.X = p2.X + length * verticalX(p2,Shape->Element(3));
-//                 p3.Y = p2.Y;
-//                 break;
-//        }
-//    }
+    p3 = getPerpendicular(p2,p1,t.Element(0),length,t.Element(1),t.Element(0));
 
     Shape = new Triangle(p1,p2,p3);
     myShapes[2] = new ScreenPolygon(Shape);
@@ -393,36 +303,12 @@ void Proof::doRightAcute(const Triangle& t)
     create second parallelogram
     *******************/
 
-    p1 = t.Element(0);
-    p2 = t.Element(2);
+    p1 = t.Element(2);
+    p2 = t.Element(0);
 
-//    dir = drawDirection(p2,p1,t.Element(1));
     length = t.Element(0).Distance(t.Element(1));
-    p3 = getPerpendicular(p2,p1,t.Element(1),distance,p1,t.Element(1));
-//    switch(Direction(p1,t.Element(1))) {
-//        case NORTHWEST:
-//        case NORTHEAST:
-//        case SOUTHWEST:
-//        case SOUTHEAST:
-//            if(dir) { 
-//                slant = t.Element(0).Perpendicular(t.Element(1));
-//                p3 = p2.Segment(slant, dir * length);
-//                break;
-//            }
-//            else {
-//                
-//            }
-//        case WEST:
-//        case EAST:
-//            p3.Y = p2.Y - (t.Element(2).Y - t.Element(0).Y);
-//            p3.X = p2.X;
-//            break;
-//        case NORTH:
-//        case SOUTH:
-//            p3.X = p2.X  - (t.Element(2).X - t.Element(0).X);
-//            p3.Y = p2.Y;
-//            break;
-//   }
+    p3 = getPerpendicular(p2,p1,t.Element(1),length,t.Element(0),t.Element(1));
+
     Shape = new Parallelogram(p1,p2,p3);
     myShapes[4] = new ScreenPolygon(Shape);
     myShapes[4]->Color = getShapeColor(RIGHT_ACUTE,4);//purple
@@ -436,7 +322,7 @@ void Proof::doRightAcute(const Triangle& t)
     *******************/
 
     p1 = t.Element(2);
-    p2 = Shape->Element(2);
+    p2 = Shape->Element(3);
     p3 = myShapes[1]->Shape().Element(3);
 
     Shape = new Triangle(p1,p2,p3);
@@ -492,9 +378,8 @@ void Proof::doLeftObtuse(const Triangle& t)
     p1 = t.Element(2);
     p2 = t.Element(0);
 
-    double dir;
-//    dir = drawDirection(p1,p2,t.Element(1));
     length = t.Element(0).Distance(t.Element(2));
+    p3 = getPerpendicular(p2,p1,t.Element(1),length,p1,p2);
 //    if(dir)
 //    {
 //           slant = p1.Perpendicular(p2);
@@ -542,29 +427,8 @@ void Proof::doLeftObtuse(const Triangle& t)
     p1 = t.Element(1);
     p2 = Shape->Element(3);
 
-    dir = drawDirection(t.Element(0),t.Element(1),t.Element(2));
     length = t.Element(0).Distance(t.Element(1));
-    if(dir)
-    {
-           slant = p1.Perpendicular(t.Element(0));
-           p3 = p2.Segment(slant, dir * length);
-    }
-    else
-    {
-        switch(Direction(p1,t.Element(0)))
-        {
-            case WEST:
-            case EAST:
-                 p3.Y = p2.Y + length * horizontalY(p1,p2);
-                 p3.X = p2.X;
-                 break;
-            case NORTH:
-            case SOUTH:
-                 p3.X = p2.X + length * verticalX(p1,p2);
-                 p3.Y = p2.Y;
-                 break;
-        }
-    }
+    p3 = getPerpendicular(p2,p1,t.Element(0),length,t.Element(1),t.Element(0));
 
     Shape = new Triangle(p1,p2,p3);
     myShapes[3] = new ScreenPolygon(Shape);
@@ -655,30 +519,9 @@ void Proof::doRightObtuse(const Triangle& t)
 
     
     double dir;
-    dir = drawDirection(p1,p2,t.Element(0));
+
     length = p1.Distance(p2);
-    if(dir)
-    {
-           //cout << "dir: " << dir << ", length: " << length << ", slope: " << slant << ", dir: " << Direction(p1,p2) << endl;
-           slant = p1.Perpendicular(p2);
-           p3 = p2.Segment(slant, dir * length);
-    }
-    else
-    {
-        switch(Direction(p1,p2))
-        {
-            case WEST:
-            case EAST:
-                 p3.Y = p1.Y + length * horizontalY(p1,t.Element(0));
-                 p3.X = p1.X;
-                 break;
-            case NORTH:
-            case SOUTH:
-                 p3.X = p1.X + length * verticalX(p1,t.Element(0));
-                 p3.Y = p1.Y;
-                 break;
-        }
-    }
+    p3 = getPerpendicular(p2,p1,t.Element(0),length,p1,p2);
 
     Shape = new Parallelogram(p1,p2,p3);
     myShapes[1] = new ScreenPolygon(Shape);
@@ -695,50 +538,9 @@ void Proof::doRightObtuse(const Triangle& t)
     p1 = Shape->Element(3);
     p2 = Shape->Element(0);
     
-    dir = drawDirection(t.Element(1),t.Element(2),t.Element(0));
     length = t.Element(0).Distance(t.Element(2));
-    //cout<<"length: "<<horizontalY(p1,Shape->Element(2))<<endl;
-    if(dir)
-    {
-           //cout<<"dir not zero"<<endl;
-       slant = t.Element(0).Perpendicular(t.Element(2));
-       p3 = p1.Segment(slant, dir * length);
-    }
-    else
-    {
-        switch(Direction(p1,p2))
-        {
-            case WEST:
-            case EAST:
-                 p3.Y = p1.Y + length * horizontalY(p1,Shape->Element(2));
-                 p3.X = p1.X;
-                 break;
-            case NORTH:
-            case SOUTH:
-                 p3.X = p1.X + length * verticalX(p1,Shape->Element(2));
-                 p3.Y = p1.Y;
-                 break;
-        }
+    p3 = getPerpendicular(p1,p2,t.Element(0),length,t.Element(0),t.Element(2));
 
-    }
-    //cout<<"end"<<endl;
-//    if(t.Element(0).X - t.Element(2).X == 0)//infinite slant
-//    {
-//        p2.Y = p1.Y;
-//        p2.X = p1.X + length;
-//    }
-//    else if(t.Element(0).Y - t.Element(2).Y == 0)//0slant
-//    {
-//        p2.X = p1.X;
-//        p2.Y = p1.Y - length;
-//    }
-//    else
-//    {
-//        slant = t.Element(0).Perpendicular(t.Element(2));
-//        p2 = p1.Segment(slant, -length);
-//    }
-
-//    p3 = t.Element(2);
 
     Shape = new Triangle(p1,p2,p3);
     myShapes[2] = new ScreenPolygon(Shape);
@@ -787,109 +589,6 @@ DIR Proof::Direction(const Point& p1, const Point& p2) {
     }
     
 }
-//double dir = drawDirection(p1,p2,element(0));
-//if(dir)
-//       Segment(slope, dir * distance)
-//else
-//{
-//    
-//}
-//double Proof::drawDirection(const Point& p1, const Point& p2, const Point& p3) {
-//       DIR dir1 = Direction(p1,p2);
-//       DIR dir2 = Direction(p1,p3);
-//       switch(dir1) {
-//       case NORTH:
-//       case SOUTH:
-//       case EAST:
-//       case WEST:
-//            return 0;
-//       case NORTHWEST:
-//            switch(dir2) {
-//                case NORTHWEST:
-//                     return abs(p1.Slope(p2) > p1.Slope(p3)) ? 1: -1;
-//                case WEST:
-//                case SOUTHWEST:
-//                case SOUTH:
-//                     return 1;
-//                case NORTH:
-//                case NORTHEAST:
-//                case EAST:
-//                case SOUTHEAST:
-//                     return -1;
-//            }
-//            break;
-//       case SOUTHWEST:
-//            switch(dir2) {
-//            case SOUTHWEST:
-//                 return abs(p1.Slope(p2) < p1.Slope(p3)) ? 1: -1;
-//             case WEST:
-//             case NORTHWEST:
-//             case NORTH:
-//                  return 1;
-//             case SOUTH:
-//             case SOUTHEAST:
-//             case EAST:
-//             case NORTHEAST:
-//                  return -1;
-//            }
-//            break;
-//       case SOUTHEAST:
-//            switch(dir2) {
-//                 case SOUTHEAST:
-//                      return abs(p1.Slope(p2) > p1.Slope(p3)) ? -1 : 1;
-//                 case EAST:
-//                 case NORTHEAST:
-//                 case NORTH:
-//                      return -1;
-//                 case NORTHWEST:
-//                 case WEST:
-//                 case SOUTHWEST:
-//                 case SOUTH:
-//                      return 1;
-//            }
-//       case NORTHEAST:
-//            switch(dir2) {
-//                 case NORTHEAST:
-//                      return abs(p1.Slope(p2) < p1.Slope(p3)) ? -1 : 1;
-//                 case EAST:
-//                 case SOUTHEAST:
-//                 case SOUTH:
-//                      return -1;
-//                 case NORTHWEST:
-//                 case WEST:
-//                 case SOUTHWEST:
-//                 case NORTH:
-//                      return 1;
-//            }     
-//       }
-//}
-
-//double Proof::verticalX(const Point& p1, const Point& p3) {
-//    switch(Direction(p1,p3)) {
-//    case WEST:
-//    case SOUTHWEST:
-//    case NORTHWEST:
-//        return 1;
-//    case EAST:
-//    case SOUTHEAST:
-//    case NORTHEAST:
-//        return -1;
-//    }
-//}
-//
-//double Proof::horizontalY(const Point& p1, const Point& p3) {
-//    switch(Direction(p1,p3)) {
-//    case NORTHEAST:
-//    case NORTH:
-//    case NORTHWEST:
-//        return 1;
-//    case SOUTHEAST:
-//    case SOUTH:
-//    case SOUTHWEST:
-//        return -1;
-//    }
-//}
-
 
 int getShapeColor(PROOF_TYPE t,unsigned int index) {
      int result = makecol(64,64,255);
@@ -907,7 +606,7 @@ int getShapeColor(PROOF_TYPE t,unsigned int index) {
      }
      return result;
 }
-Point getPerpendicular(Point vertex, Point shared, Point unshared, double distance, Point slopeStart, Point slopeStop) {
+Point Proof::getPerpendicular(Point vertex, Point shared, Point unshared, double distance, Point slopeStart, Point slopeStop) {
       DIR common, uncommon, draw;
       bool horizontal;
       double drawSlope = 0;
@@ -934,6 +633,7 @@ Point getPerpendicular(Point vertex, Point shared, Point unshared, double distan
             case SOUTHEAST:
                  distance *= -1;
             }
+            break;
        case SOUTH:
             switch(uncommon) {
             case SOUTHEAST:
@@ -941,6 +641,7 @@ Point getPerpendicular(Point vertex, Point shared, Point unshared, double distan
             case NORTHEAST:
                  distance *= -1;
             }
+            break;
        case WEST:
        case EAST:
             switch(uncommon) {
@@ -949,6 +650,7 @@ Point getPerpendicular(Point vertex, Point shared, Point unshared, double distan
             case NORTHWEST:
                  distance *= -1;
             }
+            break;
        case NORTHEAST:
             switch(uncommon) {
             case EAST:
@@ -957,14 +659,15 @@ Point getPerpendicular(Point vertex, Point shared, Point unshared, double distan
                  distance *= -1;
                  break;
             case NORTHEAST:
-                 if(abs(drawSlope) < abs(vertex.Slope(common)))
+                 if(fabs(drawSlope) < fabs(vertex.Slope(common)))
                       distance *= -1;
                  break;
             case SOUTHWEST:
-                 if(abs(drawSlope) > abs(vertex.Slope(common)))
+                 if(fabs(drawSlope) > fabs(vertex.Slope(common)))
                       distance *= -1;
                  break;
             }
+            break;
        case NORTHWEST:
             switch(uncommon) {
             case EAST:
@@ -973,14 +676,15 @@ Point getPerpendicular(Point vertex, Point shared, Point unshared, double distan
                  distance *= -1;
                  break;
             case NORTHWEST:
-                 if(abs(drawSlope) > abs(vertex.Slope(common)))
+                 if(fabs(drawSlope) > fabs(vertex.Slope(common)))
                       distance *= -1;
                  break;
             case SOUTHEAST:
-                 if(abs(drawSlope) < abs(vertex.Slope(common)))
+                 if(fabs(drawSlope) < fabs(vertex.Slope(common)))
                       distance *= -1;
                  break;
             }
+            break;
        case SOUTHEAST:
             switch(uncommon) {
             case EAST:
@@ -989,14 +693,15 @@ Point getPerpendicular(Point vertex, Point shared, Point unshared, double distan
                  distance *= -1;
                  break;
             case SOUTHEAST:
-                 if(abs(drawSlope) < abs(vertex.Slope(common)))
+                 if(fabs(drawSlope) < fabs(vertex.Slope(common)))
                       distance *= -1;
                  break;
             case NORTHWEST:
-                 if(abs(drawSlope) > abs(vertex.Slope(common)))
+                 if(fabs(drawSlope) > fabs(vertex.Slope(common)))
                       distance *= -1;
                  break;
             }
+            break;
        case SOUTHWEST:
             switch(uncommon) {
             case EAST:
@@ -1005,14 +710,15 @@ Point getPerpendicular(Point vertex, Point shared, Point unshared, double distan
                  distance *= -1;
                  break;
             case SOUTHWEST:
-                 if(abs(drawSlope) > abs(vertex.Slope(common)))
+                 if(fabs(drawSlope) > fabs(vertex.Slope(common)))
                       distance *= -1;
                  break;
             case NORTHWEST:
-                 if(abs(drawSlope) < abs(vertex.Slope(common)))
+                 if(fabs(drawSlope) < fabs(vertex.Slope(common)))
                       distance *= -1;
                  break;
             }
+            break;
       }
       Point result;
       if(drawSlope)
@@ -1024,7 +730,8 @@ Point getPerpendicular(Point vertex, Point shared, Point unshared, double distan
            }
            else {
                 result.X = vertex.X;
-                result.Y = vertex.Y + distance;
+                result.Y = vertex.Y - distance;
            }
       }
+      return result;
 }
