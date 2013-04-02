@@ -1,4 +1,5 @@
 #include <allegro.h>
+#include <string>
 #include <fstream>
 #include <cstdlib>
 #include "ScreenPolygon.h"
@@ -29,6 +30,7 @@ Point centerObject(int minX, int minY, int maxX, int maxY, int width, int height
 double scaleObject(double maxW, double maxH, double width, double height);
 void centerProof(Proof& p, Outline& constrain);
 void moveOutline(Outline& o, Proof& p);
+void labelIndices(Polygon* p, BITMAP* buffer);
 
 int main() {
     
@@ -156,6 +158,7 @@ int main() {
              drawTriangleInfo(buffer,points);
              drawProof(buffer,*leftProof);
              drawProof(buffer,*rightProof);
+             labelIndices(&points,buffer);
              redraw = false;
          }
          blit(buffer,screen,0,0,0,0,screen_width,screen_height);
@@ -178,8 +181,9 @@ void drawTriangleInfo(BITMAP* buffer, const Outline& o) {
 }
 
 void drawProof(BITMAP* buffer, const Proof& p) {
-     for(unsigned int i = 0; i < p.Count(); i++)
+     for(unsigned int i = 1; i < p.Count(); i++)
           p.Shape(i).Draw(buffer);
+     p.Shape(0).Draw(buffer);
 }
 
 int mouseOver(Outline& o) {
@@ -238,4 +242,13 @@ void moveOutline(Outline& o, Proof& p) {
          o.Element(i).X = p.Shape(0).Shape().Element(i).X;
          o.Element(i).Y = p.Shape(0).Shape().Element(i).Y;
      }
+}
+
+void labelIndices(Polygon* p, BITMAP* buffer) {
+     std::string labels[3] = {"C","B","A"};
+     for(unsigned int i = 0; i < p->Size(); i++) {
+        circlefill( buffer, int(p->Element(i).X), int(p->Element(i).Y), 10, makecol( 0,0, 0));
+        textout_ex( buffer, font, labels[i].c_str(), int(p->Element(i).X) - 3, int(p->Element(i).Y) - 3,
+                    makecol( 0, 255, 0), makecol( 0, 0, 0) );
+      }
 }
