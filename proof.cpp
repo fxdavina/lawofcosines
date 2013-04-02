@@ -4,6 +4,21 @@
 #include "parallelogram.h"
 #include "outline.h"
 #include <allegro.h>
+
+#define DEBUG_PROOF
+#ifdef DEBUG_PROOF
+#include <fstream>
+#include <string>
+#include <sstream>
+void debugProof(std::string message) {
+     std::ofstream out;
+     out.open("debug.txt",std::ios::app);
+     out << message << std::endl;
+     out.close();
+}
+
+#endif
+
 using namespace std;
 int getShapeColor(PROOF_TYPE t,unsigned int index);
 
@@ -52,6 +67,9 @@ Proof &Proof::operator =(const Proof &other)
 }
 Proof::Proof(PROOF_TYPE type, const Triangle& tri)
 {
+                        #ifdef DEBUG_PROOF
+                        debugProof("Create Proof");
+                        #endif
     switch(type)
     {
         case LEFT_ACUTE:
@@ -251,13 +269,15 @@ void Proof::doRightAcute(const Triangle& t)
     /******************
     create first square
     *******************/
-
+                        #ifdef DEBUG_PROOF
+                        debugProof("\tFirst Square");
+                        #endif    
     p1 = t.Element(2);//thirds point of triangle
     p2 = t.Element(1);//second point of triangle
     
     length = p1.Distance(p2);
     p3 = getPerpendicular(p2,p1,t.Element(0),length,p1,p2);
-    
+
 
     Shape = new Parallelogram(p1, p2, p3);
     myShapes[1] = new ScreenPolygon(Shape);
@@ -270,6 +290,9 @@ void Proof::doRightAcute(const Triangle& t)
     /******************
     create first triangle
     *******************/
+                        #ifdef DEBUG_PROOF
+                        debugProof("\tFirst Triangle");
+                        #endif    
 
     p1 = Shape->Element(1);
     p2 = Shape->Element(2);
@@ -302,6 +325,9 @@ void Proof::doRightAcute(const Triangle& t)
     /******************
     create second parallelogram
     *******************/
+                        #ifdef DEBUG_PROOF
+                        debugProof("\tSecond Parallelogram");
+                        #endif    
 
     p1 = t.Element(2);
     p2 = t.Element(0);
@@ -625,6 +651,11 @@ Point Proof::getPerpendicular(Point vertex, Point shared, Point unshared, double
       default:
            drawSlope = slopeStart.Perpendicular(slopeStop);
       }
+      #ifdef DEBUG_PROOF
+      std::stringstream ss;
+      ss << "\t\tCOMMON: " << common << ", UNCOMMON: " << uncommon << ",DRAW: " << draw << ", SLOPE: " << drawSlope;
+      debugProof(ss.str());
+      #endif 
       switch(common) {
        case NORTH:
             switch(uncommon) {
@@ -721,9 +752,16 @@ Point Proof::getPerpendicular(Point vertex, Point shared, Point unshared, double
             break;
       }
       Point result;
-      if(drawSlope)
+      if(drawSlope) {
+                    #ifdef DEBUG_PROOF
+           debugProof("\t\tCalc Valid Slope");
+           #endif
            result = vertex.Segment(drawSlope,distance);
+      }
       else {
+                                   #ifdef DEBUG_PROOF
+                        debugProof("\t\tCalc other slope");
+                        #endif
            if(horizontal) {
                 result.Y = vertex.Y;
                 result.X = vertex.X + distance;
