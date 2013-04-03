@@ -128,9 +128,6 @@ int main() {
               }
          }
          else {
-                    #ifdef DEBUG
-                    debugOut("Mouse 1 not clicked");
-                    #endif
               if(wasClicked > -1) {
                                    #ifdef DEBUG
                     debugOut("set rescale");
@@ -150,6 +147,11 @@ int main() {
               centerProof(*leftProof,leftBox);
               centerProof(*rightProof,rightBox);
               moveOutline(points,*leftProof);
+              delete tri;
+              delete refl;
+              tri = new Triangle(points.Element(0),points.Element(1),points.Element(2));
+              refl = new Triangle(*tri);
+              refl->Translate(screen_midX,0);
               redraw = true;
          }
          if(redraw) {
