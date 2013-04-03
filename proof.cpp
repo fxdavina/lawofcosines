@@ -296,9 +296,10 @@ void Proof::doRightAcute(const Triangle& t)
 
     p1 = Shape->Element(1);
     p2 = Shape->Element(2);
-
+    Point horiz(p2.X + t.Element(1).X - t.Element(0).X,
+                p2.Y + t.Element(1).Y - t.Element(0).Y);
     length = t.Element(0).Distance(t.Element(1));
-    p3 = getPerpendicular(p2,p1,t.Element(0),length,t.Element(1),t.Element(0));
+    p3 = getPerpendicular(p2,horiz,Shape->Element(3),length,t.Element(1),t.Element(0));
 
     Shape = new Triangle(p1,p2,p3);
     myShapes[2] = new ScreenPolygon(Shape);
@@ -331,9 +332,10 @@ void Proof::doRightAcute(const Triangle& t)
 
     p1 = t.Element(2);
     p2 = t.Element(0);
-
+    horiz.X = p2.X + t.Element(0).X - t.Element(1).X;
+    horiz.Y = p2.Y + t.Element(0).Y - t.Element(1).Y;
     length = t.Element(0).Distance(t.Element(1));
-    p3 = getPerpendicular(p2,p1,t.Element(1),length,t.Element(0),t.Element(1));
+    p3 = getPerpendicular(p2,horiz,Shape->Element(3),length,t.Element(0),t.Element(1));
 
     Shape = new Parallelogram(p1,p2,p3);
     myShapes[4] = new ScreenPolygon(Shape);
@@ -454,7 +456,7 @@ void Proof::doLeftObtuse(const Triangle& t)
     p2 = Shape->Element(3);
 
     length = t.Element(0).Distance(t.Element(1));
-    p3 = getPerpendicular(p2,p1,t.Element(0),length,t.Element(1),t.Element(0));
+    p3 = getPerpendicular(Shape->Element(3),Shape->Element(2),Shape->Element(0),length,t.Element(1),t.Element(0));
 
     Shape = new Triangle(p1,p2,p3);
     myShapes[3] = new ScreenPolygon(Shape);
@@ -565,7 +567,7 @@ void Proof::doRightObtuse(const Triangle& t)
     p2 = Shape->Element(0);
     
     length = t.Element(0).Distance(t.Element(2));
-    p3 = getPerpendicular(p1,p2,t.Element(0),length,t.Element(0),t.Element(2));
+    p3 = getPerpendicular(p1,p2,Shape->Element(2),length,t.Element(0),t.Element(2));
 
 
     Shape = new Triangle(p1,p2,p3);
@@ -653,18 +655,17 @@ Point Proof::getPerpendicular(Point vertex, Point shared, Point unshared, double
       }
       #ifdef DEBUG_PROOF
       std::stringstream ss;
-      ss << "\t\tCOMMON: " << common << ", UNCOMMON: " << uncommon << ",DRAW: " << draw << ", SLOPE: " << drawSlope;
+      ss << "\t\tCOMMON: " << common;
+      if(vertex.X != shared.X)
+                  ss << "(" << vertex.Slope(shared) << ") ";
+      ss << ", UNCOMMON: " << uncommon;
+            if(vertex.X != unshared.X)
+                  ss << "(" << vertex.Slope(unshared) << ") ";
+      ss << ",DRAW: " << draw << ", SLOPE: " << drawSlope;
       debugProof(ss.str());
       #endif 
       switch(common) {
        case NORTH:
-            switch(uncommon) {
-            case NORTHEAST:
-            case EAST:
-            case SOUTHEAST:
-                 distance *= -1;
-            }
-            break;
        case SOUTH:
             switch(uncommon) {
             case SOUTHEAST:
@@ -690,11 +691,11 @@ Point Proof::getPerpendicular(Point vertex, Point shared, Point unshared, double
                  distance *= -1;
                  break;
             case NORTHEAST:
-                 if(fabs(drawSlope) < fabs(vertex.Slope(common)))
+                 if(fabs(vertex.Slope(unshared)) < fabs(vertex.Slope(shared)))
                       distance *= -1;
                  break;
             case SOUTHWEST:
-                 if(fabs(drawSlope) > fabs(vertex.Slope(common)))
+                 if(fabs(vertex.Slope(unshared)) > fabs(vertex.Slope(shared)))
                       distance *= -1;
                  break;
             }
@@ -707,11 +708,11 @@ Point Proof::getPerpendicular(Point vertex, Point shared, Point unshared, double
                  distance *= -1;
                  break;
             case NORTHWEST:
-                 if(fabs(drawSlope) > fabs(vertex.Slope(common)))
+                 if(fabs(vertex.Slope(unshared)) > fabs(vertex.Slope(shared)))
                       distance *= -1;
                  break;
             case SOUTHEAST:
-                 if(fabs(drawSlope) < fabs(vertex.Slope(common)))
+                 if(fabs(vertex.Slope(unshared)) < fabs(vertex.Slope(shared)))
                       distance *= -1;
                  break;
             }
@@ -724,11 +725,22 @@ Point Proof::getPerpendicular(Point vertex, Point shared, Point unshared, double
                  distance *= -1;
                  break;
             case SOUTHEAST:
-                 if(fabs(drawSlope) < fabs(vertex.Slope(common)))
+                #ifdef DEBUG_PROOF
+                ss.str("");
+                ss << "\t\tDOUBLE SE: " << distance;
+                #endif 
+                if(fabs(vertex.Slope(unshared)) < fabs(vertex.Slope(shared))) {
                       distance *= -1;
+                      #ifdef DEBUG_PROOF
+                        ss << "->" << distance;
+                        #endif
+                }
+                #ifdef DEBUG_PROOF
+                debugProof(ss.str());
+                #endif
                  break;
             case NORTHWEST:
-                 if(fabs(drawSlope) > fabs(vertex.Slope(common)))
+                 if(fabs(vertex.Slope(unshared)) > fabs(vertex.Slope(shared)))
                       distance *= -1;
                  break;
             }
@@ -741,16 +753,21 @@ Point Proof::getPerpendicular(Point vertex, Point shared, Point unshared, double
                  distance *= -1;
                  break;
             case SOUTHWEST:
-                 if(fabs(drawSlope) > fabs(vertex.Slope(common)))
-                      distance *= -1;
+                 if(fabs(vertex.Slope(unshared)) > fabs(vertex.Slope(shared)))
+                      distance = -distance;
                  break;
-            case NORTHWEST:
-                 if(fabs(drawSlope) < fabs(vertex.Slope(common)))
+            case NORTHEAST:
+                 if(fabs(vertex.Slope(unshared)) < fabs(vertex.Slope(shared)))
                       distance *= -1;
                  break;
             }
             break;
       }
+      #ifdef DEBUG_PROOF
+      ss.str("");
+      ss << "\t\tDISTANCE: " << distance;
+      debugProof(ss.str());
+      #endif 
       Point result;
       if(drawSlope) {
                     #ifdef DEBUG_PROOF
