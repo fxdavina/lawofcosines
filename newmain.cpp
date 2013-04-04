@@ -27,7 +27,7 @@ void drawTriangleInfo(BITMAP* buffer, const Outline& o);
 void drawProof(BITMAP* buffer, const Proof& p);
 int mouseOver(Outline& o);
 Point centerObject(int minX, int minY, int maxX, int maxY, int width, int height);
-double scaleObject(double maxW, double maxH, double width, double height);
+double scaleProof(Proof& p, Outline& constrain);
 void centerProof(Proof& p, Outline& constrain);
 void moveOutline(Outline& o, Proof& p);
 void labelIndices(Polygon* p, BITMAP* buffer);
@@ -42,6 +42,7 @@ int main() {
     #endif
     
     int screen_height, screen_width;
+    int padding = 10;
     allegro_init();
     install_keyboard();
     install_mouse();
@@ -77,15 +78,15 @@ int main() {
     #ifdef DEBUG
     debugOut("init proofs");
     #endif
-    leftBox.Element(0).X = 0;
-    leftBox.Element(0).Y = border;
-    leftBox.Element(1).X = screen_midX;
-    leftBox.Element(1).Y = screen_height;
+    leftBox.Element(0).X = 0 + padding;
+    leftBox.Element(0).Y = border + padding;
+    leftBox.Element(1).X = screen_midX - padding;
+    leftBox.Element(1).Y = screen_height - padding;
     
-    rightBox.Element(0).X = screen_midX;
-    rightBox.Element(0).Y = border;
-    rightBox.Element(1).X = screen_width;
-    rightBox.Element(1).Y = screen_height; 
+    rightBox.Element(0).X = screen_midX + padding;
+    rightBox.Element(0).Y = border + padding;
+    rightBox.Element(1).X = screen_width - padding;
+    rightBox.Element(1).Y = screen_height - padding; 
     
     if(tri->Angle(0) > 90) {
             leftProof = new Proof(LEFT_OBTUSE,*tri);
@@ -98,7 +99,7 @@ int main() {
     #ifdef DEBUG
     debugOut("enter loop");
     #endif
-
+    double scaleLeft,scaleRight,scale = 1;
     while(!key[KEY_ESC]) {
          if(mouse_b & 1) {
               wasClicked = (wasClicked == -1) ? mouseOver(points) : wasClicked;
@@ -144,6 +145,28 @@ int main() {
          }
          if(rescale) {
               rescale = false;
+              scaleLeft = scaleProof(*leftProof,leftBox);
+              scaleRight = scaleProof(*rightProof,rightBox);
+              scale = (scaleLeft < scaleRight) ? scaleLeft : scaleRight;
+              if(scale < 1) {
+                   delete leftProof;
+                   delete rightProof;
+                   delete tri;
+                   delete refl;
+                   tri = new Triangle(Point(points.Element(0).X*scale,points.Element(0).Y*scale),
+                                      Point(points.Element(1).X*scale,points.Element(1).Y*scale),
+                                      Point(points.Element(2).X*scale,points.Element(2).Y*scale));
+                   refl = new Triangle(*tri);
+                   refl->Translate(screen_midX,0);
+                   if(tri->Angle(0) > 90) {
+                        leftProof = new Proof(LEFT_OBTUSE,*tri);
+                        rightProof = new Proof(RIGHT_OBTUSE,*refl);
+                   }
+                   else {
+                        leftProof = new Proof(LEFT_ACUTE,*tri);
+                        rightProof = new Proof(RIGHT_ACUTE,*refl);
+                   }
+              }
               centerProof(*leftProof,leftBox);
               centerProof(*rightProof,rightBox);
               moveOutline(points,*leftProof);
@@ -209,10 +232,12 @@ Point centerObject(int minX, int minY, int maxX, int maxY, int width, int height
     return result;
 }
 
-double scaleObject(double maxW, double maxH, double width, double height) {
-       double result, scaleW, scaleH;
-       scaleW = maxW / width;
-       scaleH = maxH / height;
+double scaleProof(Proof& p, Outline& constrain) {
+       double width, height, result, scaleW, scaleH;
+       width = constrain.Element(1).X - constrain.Element(0).X;
+       height = constrain.Element(1).Y - constrain.Element(0).Y;
+       scaleW = width / p.Width();
+       scaleH = height / p.Height();
        result = (scaleH < scaleW) ? scaleH : scaleW;
        if(result > 1)
             result = 1;
@@ -226,13 +251,8 @@ double scaleObject(double maxW, double maxH, double width, double height) {
 }
 
 void centerProof(Proof& p, Outline& constrain) {
-double width, height, scale;
+double width, height;
 
-width = constrain.Element(1).X - constrain.Element(0).X;
-height = constrain.Element(1).Y - constrain.Element(0).Y;
-scale = scaleObject(width,height,p.Width(), p.Height());
-
-p.Scale(scale);
 Point offset = centerObject((int)constrain.Element(0).X,(int)constrain.Element(0).Y,(int)constrain.Element(1).X,(int)constrain.Element(1).Y,int(p.Width()),int(p.Height()));
 p.Translate(offset.X-p.MinX(),offset.Y-p.MinY());
      
