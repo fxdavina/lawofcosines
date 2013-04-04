@@ -129,6 +129,10 @@ void Proof::Scale(double S)
             myShapes[i]->Shape().Element(j).Y *= S;
         }
     }
+    minX *= S;
+    minY *= S;
+    width *= S;
+    height *= S;
 }
 
 void Proof::Translate(double X, double Y)
@@ -565,9 +569,10 @@ void Proof::doRightObtuse(const Triangle& t)
 
     p1 = Shape->Element(3);
     p2 = Shape->Element(0);
-    
+    Point horiz(p1.X + t.Element(2).X - t.Element(0).X,
+                p1.Y + t.Element(2).Y - t.Element(0).Y);
     length = t.Element(0).Distance(t.Element(2));
-    p3 = getPerpendicular(p1,p2,Shape->Element(2),length,t.Element(0),t.Element(2));
+    p3 = getPerpendicular(p1,horiz,Shape->Element(2),length,t.Element(0),t.Element(2));
 
 
     Shape = new Triangle(p1,p2,p3);
