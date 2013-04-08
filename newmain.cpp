@@ -25,6 +25,7 @@ void debugOut(std::string message) {
 void drawInterface(BITMAP* buffer, int screen_width, int screen_height, int size, int color);
 void drawTriangleInfo(BITMAP* buffer, const Outline& o);
 void drawProof(BITMAP* buffer, const Proof& p);
+void drawStats(BITMAP* buffer, const Outline& o, int border);
 int mouseOver(Outline& o);
 Point centerObject(int minX, int minY, int maxX, int maxY, int width, int height);
 double scaleProof(Proof& p, Outline& constrain);
@@ -184,6 +185,8 @@ int main() {
              drawProof(buffer,*leftProof);
              drawProof(buffer,*rightProof);
              labelIndices(&points,buffer);
+             textout_ex( buffer, font, "Triangle: ", padding, padding,
+                         makecol( 0, 0, 0), makecol( 255, 255, 255) );
              redraw = false;
          }
          blit(buffer,screen,0,0,0,0,screen_width,screen_height);
@@ -273,4 +276,45 @@ void labelIndices(Polygon* p, BITMAP* buffer) {
         textout_ex( buffer, font, labels[i].c_str(), int(p->Element(i).X) - 3, int(p->Element(i).Y) - 3,
                     makecol( 0, 255, 0), makecol( 0, 0, 0) );
       }
+}
+
+void drawStats(BITMAP* buffer, const Outline& o, int border) {
+    int padding = 5, divs = (border - 2*padding)/3;
+    std::string points[3] = {"C","B","A"};
+    std::string sides[3] =  {"CA","BC","AB"};
+    for(int i = 0; i < 3; i++) {
+         points[i] += ": %-3d";
+         sides[i] += ": %-3d";
+    }
+     	//A
+    textprintf_ex( buffer, font, left,top, makecol(0, 0, 0),
+                   makecol(255, 255, 255),"A: (%-3d,", Point.X);
+    textprintf_ex( buffer, font, 150,5, makecol(0, 0, 0),
+                   makecol(255, 255, 255), "%-3d)", y_1);
+    baseangle = temp->Angle(0);
+    textprintf_ex( buffer, font, 190,5, makecol(0, 0, 0),
+                   makecol(255, 255, 255), "Angle: %d", int(baseangle));
+    textprintf_ex( buffer, font, 280,5, makecol(0, 0, 0),
+                   makecol(255, 255, 255), "A->B: %-3d", 
+                   int(distance(x1,y_1,x2,y2)));
+	//B
+    textprintf_ex( buffer, font, 80,15, makecol(0, 0, 0),
+                   makecol(255, 255, 255), "B: (%-3d,", x2);
+    textprintf_ex( buffer, font, 150,15, makecol(0, 0, 0),
+                   makecol(255, 255, 255), "%-3d)", y2);
+    textprintf_ex( buffer, font, 190,15, makecol(0, 0, 0),
+                   makecol(255, 255, 255), "Angle: %-3d", int(base->Angle(1)));
+    textprintf_ex( buffer, font, 280,15, makecol(0, 0, 0),
+                   makecol(255, 255, 255), "B->C: %-3d", 
+                   int(distance(x2,y2,x3,y3)));
+	//C
+    textprintf_ex( buffer, font, 80,25, makecol(0, 0, 0),
+                   makecol(255, 255, 255), "C: (%-3d,", x3);
+    textprintf_ex( buffer, font, 150,25, makecol(0, 0, 0),
+                   makecol(255, 255, 255), "%-3d)", y3);
+    textprintf_ex( buffer, font, 190,25, makecol(0, 0, 0),
+                   makecol(255, 255, 255), "Angle: %-3d", int(base->Angle(2)));
+    textprintf_ex( buffer, font, 280,25, makecol(0, 0, 0),
+                   makecol(255, 255, 255), "C->A: %-3d", 
+                   int(distance(x1,y_1,x3,y3)));
 }
