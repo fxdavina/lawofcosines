@@ -21,6 +21,14 @@ void debugOut(std::string message) {
 
 #endif
 
+const int STATIC = 0;
+const int DRAG = 1;
+const int RESCALE = 2;
+const int REDRAW = 4;
+
+
+
+
 
 void drawInterface(BITMAP* buffer, int screen_width, int screen_height, int size, int color);
 void drawTriangleInfo(BITMAP* buffer, const Outline& o);
@@ -32,6 +40,7 @@ double scaleProof(Proof& p, Outline& constrain);
 void centerProof(Proof& p, Outline& constrain);
 void moveOutline(Outline& o, Proof& p);
 void labelIndices(Polygon* p, BITMAP* buffer);
+void swapPoints(Point& p1, Point& p2);
 
 int main() {
     
@@ -142,7 +151,27 @@ int main() {
                     #ifdef DEBUG
                     debugOut("Mouse 2 clicked");
                     #endif
-              redraw = true;
+              int newAngle;
+              if( (newAngle = mouseOver(points)) > 0 ) {
+                  swapPoints(points.Element(newAngle),points.Element(0));
+                                     delete leftProof;
+                   delete rightProof;
+                   delete tri;
+                   delete refl;
+                   tri = new Triangle(points.Element(0),points.Element(1),points.Element(2));
+                   refl = new Triangle(*tri);
+                   refl->Translate(screen_midX,0);
+                   if(tri->Angle(0) > 90) {
+                        leftProof = new Proof(LEFT_OBTUSE,*tri);
+                        rightProof = new Proof(RIGHT_OBTUSE,*refl);
+                   }
+                   else {
+                        leftProof = new Proof(LEFT_ACUTE,*tri);
+                        rightProof = new Proof(RIGHT_ACUTE,*refl);
+                   }
+
+                  rescale = true;
+              }
          }
          if(rescale) {
               rescale = false;
@@ -297,4 +326,14 @@ void drawStats(BITMAP* buffer, Triangle* t, int border, int mid) {
                    makecol(255, 255, 255), sides[i].c_str(), 
                    int(t->Element(i).Distance(t->Element(other))));
      }
+}
+
+void swapPoints(Point& p1, Point& p2) {
+     double temp;
+     temp = p1.X;
+     p1.X = p2.X;
+     p2.X = temp;
+     temp = p2.Y;
+     p2.Y = p1.Y;
+     p1.Y = temp;
 }
