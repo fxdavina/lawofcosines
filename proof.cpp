@@ -569,8 +569,14 @@ void Proof::doRightObtuse(const Triangle& t)
 
     p1 = Shape->Element(3);
     p2 = Shape->Element(0);
+    #ifdef DEBUG_PROOF
     Point horiz(p1.X + t.Element(2).X - t.Element(0).X,
                 p1.Y + t.Element(2).Y - t.Element(0).Y);
+    std::stringstream ss;
+    ss << "A: (" << t.Element(2).X << ", " << t.Element(2).Y << "), C: (" << t.Element(0).X << ", " << t.Element(0).Y << ")"
+       << "SHAPE[3]: (" << p1.X << ", " << p1.Y << "), HORIZ: (" << horiz.X << ", " << horiz.Y << ")";
+    debugProof(ss.str());
+    #endif
     length = t.Element(0).Distance(t.Element(2));
     p3 = getPerpendicular(p1,horiz,Shape->Element(2),length,t.Element(0),t.Element(2));
 
@@ -607,10 +613,15 @@ void Proof::doRightObtuse(const Triangle& t)
 DIR Proof::Direction(const Point& p1, const Point& p2) {
     double xDiff = p2.X - p1.X;
     double yDiff = p2.Y - p1.Y;
-    if(yDiff == 0) {
+    #ifdef DEBUG_PROOF
+      std::stringstream ss;
+      ss << "\t\t\t\tyDiff: " << yDiff << ", xDiff: " << xDiff;
+      debugProof(ss.str());
+      #endif 
+    if(fabs(yDiff) < 1.0E-05) {
         return (xDiff > 0) ? EAST : WEST;
     }
-    if(xDiff == 0) {
+    if(fabs(xDiff) < 1.0E-05) {
              return (yDiff > 0) ? SOUTH : NORTH;
     }
     double m = p1.Slope(p2);
@@ -646,6 +657,14 @@ Point Proof::getPerpendicular(Point vertex, Point shared, Point unshared, double
       common = Direction(vertex,shared);
       uncommon = Direction(vertex,unshared);
       draw = Direction(slopeStart,slopeStop);
+      #ifdef DEBUG_PROOF
+      std::stringstream ss;
+      ss << "\t\tCOMPARE SHARED: (" << vertex.X << ", " << vertex.Y << ")->(" << shared.X << ", " << shared.Y << ")=" << common;
+      debugProof(ss.str());
+      ss.str("");
+      ss << "\t\tCOMPARE UNSHARED: (" << vertex.X << ", " << vertex.Y << ")->(" << unshared.X << ", " << unshared.Y << ")=" << uncommon;
+      debugProof(ss.str());
+      #endif 
       switch(draw) {
       case NORTH:
       case SOUTH:
@@ -659,7 +678,7 @@ Point Proof::getPerpendicular(Point vertex, Point shared, Point unshared, double
            drawSlope = slopeStart.Perpendicular(slopeStop);
       }
       #ifdef DEBUG_PROOF
-      std::stringstream ss;
+      ss.str("");
       ss << "\t\tCOMMON: " << common;
       if(vertex.X != shared.X)
                   ss << "(" << vertex.Slope(shared) << ") ";
