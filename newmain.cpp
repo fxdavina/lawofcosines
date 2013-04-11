@@ -68,8 +68,10 @@ int main() {
     int border = 100;
     int bgColor = makecol(255,255,255);
     int fgColor = makecol(0,0,0);
-    bool redraw = true, rescale = true, animate = false;
+    bool redraw = true, rescale = true, animate = false, obtuse = false;
     int wasClicked = -1;
+    double meet, step = 10;
+    int metCount = 0;
     Outline points(3), reflection(3), leftBox(2),rightBox(2);    
     Triangle *tri, *refl;
     Proof *leftProof, *rightProof;
@@ -99,8 +101,8 @@ int main() {
     rightBox.Element(0).Y = border + padding;
     rightBox.Element(1).X = screen_width - padding;
     rightBox.Element(1).Y = screen_height - padding; 
-    
-    if(tri->Angle(0) > 90) {
+    obtuse = tri->Angle(0) > 90;
+    if(obtuse) {
             leftProof = new Proof(LEFT_OBTUSE,*tri);
             rightProof = new Proof(RIGHT_OBTUSE,*refl);
        }
@@ -129,7 +131,8 @@ int main() {
                    tri = new Triangle(points.Element(0),points.Element(1),points.Element(2));
                    refl = new Triangle(*tri);
                    refl->Translate(screen_midX,0);
-                   if(tri->Angle(0) > 90) {
+                   obtuse = tri->Angle(0) > 90;
+                   if(obtuse) {
                         leftProof = new Proof(LEFT_OBTUSE,*tri);
                         rightProof = new Proof(RIGHT_OBTUSE,*refl);
                    }
@@ -163,7 +166,8 @@ int main() {
                    tri = new Triangle(points.Element(0),points.Element(1),points.Element(2));
                    refl = new Triangle(*tri);
                    refl->Translate(screen_midX,0);
-                   if(tri->Angle(0) > 90) {
+                   obtuse = tri->Angle(0) > 90;
+                   if(obtuse) {
                         leftProof = new Proof(LEFT_OBTUSE,*tri);
                         rightProof = new Proof(RIGHT_OBTUSE,*refl);
                    }
@@ -190,7 +194,7 @@ int main() {
                                       Point(points.Element(2).X*scale,points.Element(2).Y*scale));
                    refl = new Triangle(*tri);
                    refl->Translate(screen_midX,0);
-                   if(tri->Angle(0) > 90) {
+                   if(obtuse) {
                         leftProof = new Proof(LEFT_OBTUSE,*tri);
                         rightProof = new Proof(RIGHT_OBTUSE,*refl);
                    }
@@ -209,7 +213,32 @@ int main() {
               refl->Translate(screen_midX,0);
               redraw = true;
          }
+         if(key[KEY_SPACE] && !animate && wasClicked == -1)  {
+              animate = true;
+              meet = screen_midX - (leftProof->Width() / 2);
+         }
          if(animate) {
+             if(leftProof->MinX() == meet) {
+                  metCount++;
+             }
+             else {
+                 leftProof->Translate(step,0);
+                 rightProof->Translate(-step,0);
+                 if(leftProof->MinX() > meet)
+                      leftProof->Translate(leftProof->MinX()-meet,0);
+                 if(rightProof->MinX() < meet)
+                      rightProof->Translate(meet-rightProof->MinX(),0);
+             }
+             if(metCount == 10) {
+                  animate = false;
+                  rescale = true;
+                  metCount = 0;
+             }
+             else {
+                 clear_to_color(buffer,bgColor);
+                 drawProof(buffer,*leftProof);
+                 drawProof(buffer,*rightProof);
+             }
          }
          if(redraw) {
              clear_to_color(buffer,bgColor);
@@ -217,6 +246,8 @@ int main() {
              drawTriangleInfo(buffer,points);
              drawProof(buffer,*leftProof);
              drawProof(buffer,*rightProof);
+             labelProof(buffer,leftProof, (obtuse) ? LEFT_OBTUSE : LEFT_ACUTE);
+             labelProof(buffer,rightProof, (obtuse) ? RIGHT_OBTUSE : RIGHT_ACUTE);
              labelIndices(&points,buffer);
              drawStats(buffer,tri,border,screen_midX);
              redraw = false;
@@ -342,33 +373,49 @@ void swapPoints(Point& p1, Point& p2) {
      p1.Y = temp;
 }
 
-void labelShape(BITMAP* buffer, ScreenPolygon* p, const char* label) {
+void labelShape(BITMAP* buffer, ScreenPolygon& p, const char* label) {
      double minX, maxX;
-     minX = maxX = p->Shape().Element(0).X;
+     minX = maxX = p.Shape().Element(0).X;
      double minY, maxY;
-     minY = maxY = p->Shape().Element(0).Y;
-     for(int i = 1; i < p->Shape().Size(); i++) {
-          if(p->Shape().Element(i).X < minX)
-               minX = p->Shape().Element(i).X;
-          else if(p->Shape().Element(i).X > maxX)
-               maxX = p->Shape().Element(i).X;
-          if(p->Shape().Element(i).Y < minY)
-               minY = p->Shape().Element(i).Y;
-          else if(p->Shape().Element(i).Y > maxY)
-               maxY = p->Shape().Element(i).Y;
+     minY = maxY = p.Shape().Element(0).Y;
+     for(int i = 1; i < p.Shape().Size(); i++) {
+          if(p.Shape().Element(i).X < minX)
+               minX = p.Shape().Element(i).X;
+          else if(p.Shape().Element(i).X > maxX)
+               maxX = p.Shape().Element(i).X;
+          if(p.Shape().Element(i).Y < minY)
+               minY = p.Shape().Element(i).Y;
+          else if(p.Shape().Element(i).Y > maxY)
+               maxY = p.Shape().Element(i).Y;
      }
-     textout_centre_ex(buffer, font, label, int((maxX + minX) / 2), int((maxY + minY) / 2), makecol(0,0,0), p->Color);
+     textout_centre_ex(buffer, font, label, int((maxX + minX) / 2), int((maxY + minY) / 2), makecol(0,0,0), p.Color);
 }
 void labelProof(BITMAP* buffer, Proof* p, PROOF_TYPE t) {
+     labelShape(buffer,p->Shape(0),"Tri");
      switch(t) {
      case LEFT_ACUTE:
-          
+          labelShape(buffer,p->Shape(1),"A^2");
+          labelShape(buffer,p->Shape(2),"B^2");
+          labelShape(buffer,p->Shape(3),"Tri");
+          labelShape(buffer,p->Shape(4),"Tri");
           break;
      case RIGHT_ACUTE:
+          labelShape(buffer,p->Shape(1),"C^2");
+          labelShape(buffer,p->Shape(2),"Tri");
+          labelShape(buffer,p->Shape(3),"a*b*cos(C)");
+          labelShape(buffer,p->Shape(4),"a*b*cos(C)");
+          labelShape(buffer,p->Shape(5),"Tri");
           break;
      case LEFT_OBTUSE:
+          labelShape(buffer,p->Shape(1),"B^2");
+          labelShape(buffer,p->Shape(2),"a*b*cos(C)");
+          labelShape(buffer,p->Shape(3),"Tri");
+          labelShape(buffer,p->Shape(4),"A^2");
+          labelShape(buffer,p->Shape(5),"a*b*cos(C)");
           break;
      case RIGHT_OBTUSE:
+          labelShape(buffer,p->Shape(1),"C^2");
+          labelShape(buffer,p->Shape(2),"Tri");
           break;
      }
 }
