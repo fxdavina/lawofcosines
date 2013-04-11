@@ -41,6 +41,8 @@ void centerProof(Proof& p, Outline& constrain);
 void moveOutline(Outline& o, Proof& p);
 void labelIndices(Polygon* p, BITMAP* buffer);
 void swapPoints(Point& p1, Point& p2);
+void labelShape(BITMAP* buffer, Polygon* p, std::string label);
+void labelProof(BITMAP* buffer, Proof* p, PROOF_TYPE t);
 
 int main() {
     
@@ -66,7 +68,7 @@ int main() {
     int border = 100;
     int bgColor = makecol(255,255,255);
     int fgColor = makecol(0,0,0);
-    bool redraw = true, rescale = true;
+    bool redraw = true, rescale = true, animate = false;
     int wasClicked = -1;
     Outline points(3), reflection(3), leftBox(2),rightBox(2);    
     Triangle *tri, *refl;
@@ -111,7 +113,7 @@ int main() {
     #endif
     double scaleLeft,scaleRight,scale = 1;
     while(!key[KEY_ESC]) {
-         if(mouse_b & 1) {
+         if(mouse_b & 1 && !animate) {
               wasClicked = (wasClicked == -1) ? mouseOver(points) : wasClicked;
               if(wasClicked > -1) {
                     #ifdef DEBUG
@@ -138,7 +140,7 @@ int main() {
                    redraw = true;
               }
          }
-         else {
+         else if(!animate) {
               if(wasClicked > -1) {
                                    #ifdef DEBUG
                     debugOut("set rescale");
@@ -147,7 +149,7 @@ int main() {
                    rescale = true;
               }
          }
-         if(mouse_b & 2) {
+         if(mouse_b & 2 && !animate) {
                     #ifdef DEBUG
                     debugOut("Mouse 2 clicked");
                     #endif
@@ -206,6 +208,8 @@ int main() {
               refl = new Triangle(*tri);
               refl->Translate(screen_midX,0);
               redraw = true;
+         }
+         if(animate) {
          }
          if(redraw) {
              clear_to_color(buffer,bgColor);
@@ -337,3 +341,35 @@ void swapPoints(Point& p1, Point& p2) {
      p2.Y = p1.Y;
      p1.Y = temp;
 }
+
+void labelShape(BITMAP* buffer, ScreenPolygon* p, const char* label) {
+     double minX, maxX;
+     minX = maxX = p->Shape().Element(0).X;
+     double minY, maxY;
+     minY = maxY = p->Shape().Element(0).Y;
+     for(int i = 1; i < p->Shape().Size(); i++) {
+          if(p->Shape().Element(i).X < minX)
+               minX = p->Shape().Element(i).X;
+          else if(p->Shape().Element(i).X > maxX)
+               maxX = p->Shape().Element(i).X;
+          if(p->Shape().Element(i).Y < minY)
+               minY = p->Shape().Element(i).Y;
+          else if(p->Shape().Element(i).Y > maxY)
+               maxY = p->Shape().Element(i).Y;
+     }
+     textout_centre_ex(buffer, font, label, int((maxX + minX) / 2), int((maxY + minY) / 2), makecol(0,0,0), p->Color);
+}
+void labelProof(BITMAP* buffer, Proof* p, PROOF_TYPE t) {
+     switch(t) {
+     case LEFT_ACUTE:
+          
+          break;
+     case RIGHT_ACUTE:
+          break;
+     case LEFT_OBTUSE:
+          break;
+     case RIGHT_OBTUSE:
+          break;
+     }
+}
+
