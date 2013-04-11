@@ -215,19 +215,31 @@ int main() {
          }
          if(key[KEY_SPACE] && !animate && wasClicked == -1)  {
               animate = true;
-              meet = screen_midX - (leftProof->Width() / 2);
+              meet = floor(screen_midX - (leftProof->Width() / 2));
          }
          if(animate) {
-             if(leftProof->MinX() == meet) {
+             #ifdef DEBUG
+                std::stringstream ss;
+                ss << "Left: " << leftProof->MinX() << ", Right: " << rightProof->MinX() << ", Meet: " << meet;
+                debugOut(ss.str());
+            #endif
+             if( int(leftProof->MinX()) ==  (int)meet ) {
                   metCount++;
              }
              else {
+             #ifdef DEBUG
+             debugOut("Not met");
+             #endif
                  leftProof->Translate(step,0);
                  rightProof->Translate(-step,0);
-                 if(leftProof->MinX() > meet)
+                 if(leftProof->MinX() > meet || rightProof->MinX() < meet) {
+             #ifdef DEBUG
+             debugOut("Passed meet");
+             #endif                                      
                       leftProof->Translate(leftProof->MinX()-meet,0);
-                 if(rightProof->MinX() < meet)
                       rightProof->Translate(meet-rightProof->MinX(),0);
+                 }
+                      
              }
              if(metCount == 10) {
                   animate = false;
