@@ -5,7 +5,7 @@
 #include "outline.h"
 #include <allegro.h>
 
-#define DEBUG_PROOF
+//#define DEBUG_PROOF
 #ifdef DEBUG_PROOF
 #include <fstream>
 #include <string>
@@ -141,6 +141,8 @@ void Proof::Translate(double X, double Y)
     {
         myShapes[i]->Shape().Translate(X,Y);
     }
+    minX += X;
+    minY += Y;
 }
 
 void Proof::doLeftAcute(const Triangle& t)
@@ -569,9 +571,9 @@ void Proof::doRightObtuse(const Triangle& t)
 
     p1 = Shape->Element(3);
     p2 = Shape->Element(0);
-    #ifdef DEBUG_PROOF
     Point horiz(p1.X + t.Element(2).X - t.Element(0).X,
                 p1.Y + t.Element(2).Y - t.Element(0).Y);
+    #ifdef DEBUG_PROOF
     std::stringstream ss;
     ss << "A: (" << t.Element(2).X << ", " << t.Element(2).Y << "), C: (" << t.Element(0).X << ", " << t.Element(0).Y << ")"
        << "SHAPE[3]: (" << p1.X << ", " << p1.Y << "), HORIZ: (" << horiz.X << ", " << horiz.Y << ")";
