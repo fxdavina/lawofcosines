@@ -7,7 +7,7 @@
 #include "Outline.h"
 #include "Proof.h"
 
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
 #include <fstream>
 #include <string>
