@@ -52,7 +52,7 @@ int main() {
     out.close();
     debugOut("init");
     #endif
-    
+
     int screen_height, screen_width;
     int padding = 10;
     allegro_init();
@@ -63,7 +63,6 @@ int main() {
     set_color_depth(desktop_color_depth());
     set_gfx_mode( GFX_AUTODETECT_FULLSCREEN, screen_width, screen_height, 0, 0);
     BITMAP* buffer = create_bitmap(screen_width,screen_height);    
-    show_mouse(screen);
     int screen_midX = screen_width / 2;
     int border = 100;
     int bgColor = makecol(255,255,255);
@@ -75,7 +74,8 @@ int main() {
     Outline points(3), reflection(3), leftBox(2),rightBox(2);    
     Triangle *tri, *refl;
     Proof *leftProof, *rightProof;
-
+    BITMAP* mouseCursor;
+    mouseCursor = load_bitmap("cursor.bmp",NULL);
     #ifdef DEBUG
     debugOut("init points");
     #endif
@@ -223,7 +223,7 @@ int main() {
                 ss << "Left: " << leftProof->MinX() << ", Right: " << rightProof->MinX() << ", Meet: " << meet;
                 debugOut(ss.str());
             #endif
-             if( int(leftProof->MinX()) ==  (int)meet ) {
+             if( floor(leftProof->MinX()) ==  floor(meet) ) {
                   metCount++;
              }
              else {
@@ -234,9 +234,11 @@ int main() {
                  rightProof->Translate(-step,0);
                  if(leftProof->MinX() > meet || rightProof->MinX() < meet) {
              #ifdef DEBUG
-             debugOut("Passed meet");
+             ss.str("");
+             ss << "Passed meet: Shift Left " << leftProof->MinX() - meet << ", Shift Right " << meet - rightProof->MinX();
+             debugOut(ss.str());
              #endif                                      
-                      leftProof->Translate(leftProof->MinX()-meet,0);
+                      leftProof->Translate(meet-leftProof->MinX(),0);
                       rightProof->Translate(meet-rightProof->MinX(),0);
                  }
                       
@@ -265,7 +267,7 @@ int main() {
              redraw = false;
          }
          blit(buffer,screen,0,0,0,0,screen_width,screen_height);
-         show_mouse(screen);
+         masked_blit(mouseCursor, screen, 0, 0, mouse_x, mouse_y, 14, 19);
          rest(50);
     }
     
